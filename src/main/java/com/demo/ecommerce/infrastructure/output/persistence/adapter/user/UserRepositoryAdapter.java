@@ -12,6 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserRepositoryAdapter implements UserRepositoryPort {
 
+    private final UserRepository userRepository;
+
     @Override
     public User save(User user) {
         return null;

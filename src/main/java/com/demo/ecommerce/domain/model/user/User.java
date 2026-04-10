@@ -15,7 +15,6 @@ public class User {
     private UserName userName;
     private Email email;
 
-    @Getter(value = AccessLevel.NONE)
     private HashedPassword password;
 
     private Rols rol;

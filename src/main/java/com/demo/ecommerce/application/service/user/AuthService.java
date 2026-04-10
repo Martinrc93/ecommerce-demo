@@ -8,11 +8,11 @@ import com.demo.ecommerce.application.port.out.UserRepositoryPort;
 import com.demo.ecommerce.domain.model.auth.RefreshToken;
 import com.demo.ecommerce.domain.model.user.User;
 import com.demo.ecommerce.infrastructure.security.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthService implements AuthUseCase {
 
     private final UserRepositoryPort userRepository;
@@ -56,7 +56,8 @@ public class AuthService implements AuthUseCase {
     private AuthResponse generateToken(User user) {
         String accessToken = jwtTokenProvider.generateAccessToken(user);
 
-        RefreshToken refreshToken = authRepository.save(RefreshToken.create(user.getId())); //TODO a crete le falta el refresh toke
+        RefreshToken refreshToken = RefreshToken.create(user.getId());
+        authRepository.save(refreshToken);
 
         return new AuthResponse(accessToken, refreshToken.getToken());
     }
