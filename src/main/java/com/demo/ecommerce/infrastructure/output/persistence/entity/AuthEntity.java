@@ -2,8 +2,11 @@ package com.demo.ecommerce.infrastructure.output.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,6 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "auth")
+@Getter
+@Setter
 public class AuthEntity {
 
     @Id
@@ -21,20 +26,20 @@ public class AuthEntity {
     private String refreshToken;
 
     @Column(nullable = false)
-    private LocalDateTime expiresAt;
+    private Instant expiresAt;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
     private boolean revoked = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiresAt);
+        return Instant.now().isAfter(this.expiresAt);
     }
 
     public void revoke() {

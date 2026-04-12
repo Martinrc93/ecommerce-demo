@@ -2,6 +2,7 @@ package com.demo.ecommerce.domain.model.user;
 
 import com.demo.ecommerce.domain.model.user.vo.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +18,7 @@ public class User {
 
     private HashedPassword password;
 
-    private Rols rol;
+    //private Rols rol;
 
     public static User create (String name,String lastName,String email,String password){
         User user = new User();
@@ -27,6 +28,7 @@ public class User {
         return user;
     }
 
+    @Builder
     public static User reconstitute (UUID id,UserName userName,Email email,HashedPassword password){
         User user = new User();
         user.id = id;

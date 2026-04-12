@@ -9,6 +9,7 @@ public interface AuthRepositoryPort {
     void save (RefreshToken token);
     Optional<RefreshToken> findByToken(String token);
     void revokeByToken(String token);
+    void update(RefreshToken token);
 
 
 }

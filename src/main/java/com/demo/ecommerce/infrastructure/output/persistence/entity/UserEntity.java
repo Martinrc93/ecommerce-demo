@@ -2,7 +2,9 @@ package com.demo.ecommerce.infrastructure.output.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -10,6 +12,8 @@ import java.util.UUID;
 @Table(name = "users")
 @NoArgsConstructor()
 @AllArgsConstructor
+@Setter
+@Getter
 public class UserEntity {
 
     @Id
@@ -19,7 +23,7 @@ public class UserEntity {
     @Column(name = "name",nullable = false, length = 30)
     private String name;
 
-    @Column(name = "last_name",nullable = false, length = 30)
+    @Column(name = "last_name", length = 30)
     private String lastName;
 
     @Column(name = "email",nullable = false, length = 255)
