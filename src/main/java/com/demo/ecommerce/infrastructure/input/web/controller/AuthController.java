@@ -3,7 +3,7 @@ package com.demo.ecommerce.infrastructure.input.web.controller;
 import com.demo.ecommerce.application.port.in.user.command.AuthResponse;
 import com.demo.ecommerce.application.port.in.user.command.LoginCommand;
 import com.demo.ecommerce.application.port.in.user.usecase.AuthUseCase;
-import com.demo.ecommerce.infrastructure.input.web.dto.RefreshRequest;
+import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.RefreshRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,8 @@
 package com.demo.ecommerce.application.service.user;
 
-import com.demo.ecommerce.application.port.in.user.command.AuthResponse;
 import com.demo.ecommerce.application.port.in.user.command.RegisterCommand;
 import com.demo.ecommerce.application.port.in.user.usecase.UserRegisterUseCase;
-import com.demo.ecommerce.application.port.in.user.usecase.dto.RegisterResult;
+import com.demo.ecommerce.application.port.in.user.command.RegisterResult;
 import com.demo.ecommerce.application.port.out.AuthRepositoryPort;
 import com.demo.ecommerce.application.port.out.UserRepositoryPort;
 import com.demo.ecommerce.domain.model.auth.RefreshToken;

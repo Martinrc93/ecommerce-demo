@@ -11,5 +11,4 @@ public interface UserRepositoryPort {
     Optional<User> getByEmail (String email);
     Optional<User> getById (UUID id);
 
-
 }

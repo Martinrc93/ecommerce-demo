@@ -1,4 +1,4 @@
-package com.demo.ecommerce.infrastructure.input.web.dto;
+package com.demo.ecommerce.infrastructure.input.web.dto.auth.request;
 
 public record LoginRequest(
         //@NotBlank

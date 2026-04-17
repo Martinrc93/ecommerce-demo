@@ -7,7 +7,7 @@ import com.demo.ecommerce.application.port.out.AuthRepositoryPort;
 import com.demo.ecommerce.application.port.out.UserRepositoryPort;
 import com.demo.ecommerce.domain.model.auth.RefreshToken;
 import com.demo.ecommerce.domain.model.user.User;
-import com.demo.ecommerce.infrastructure.input.web.dto.RefreshRequest;
+import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.RefreshRequest;
 import com.demo.ecommerce.infrastructure.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

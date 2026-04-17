@@ -1,4 +1,4 @@
-package com.demo.ecommerce.application.port.in.user.usecase.dto;
+package com.demo.ecommerce.application.port.in.user.command;
 
 public record RegisterResult(
         String firstName,

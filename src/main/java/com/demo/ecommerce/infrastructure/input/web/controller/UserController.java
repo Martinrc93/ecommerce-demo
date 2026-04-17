@@ -1,7 +1,7 @@
 package com.demo.ecommerce.infrastructure.input.web.controller;
 
 import com.demo.ecommerce.application.port.in.user.command.RegisterCommand;
-import com.demo.ecommerce.application.port.in.user.usecase.dto.RegisterResult;
+import com.demo.ecommerce.application.port.in.user.command.RegisterResult;
 import com.demo.ecommerce.application.service.user.UserRegisterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
