@@ -16,7 +16,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Desactivado para APIs REST
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/users/register", "/products/**").permitAll() // Rutas libres
+                        .requestMatchers("/auth/**", "/users/register", "/products/**", "/error", "/sales/**").permitAll() // TODO despues sacar error y poner manejo de excepciones
                         .anyRequest().authenticated()             // Todo lo demás requiere login
                 )
                 .httpBasic(Customizer.withDefaults()); // Autenticación básica para pruebas

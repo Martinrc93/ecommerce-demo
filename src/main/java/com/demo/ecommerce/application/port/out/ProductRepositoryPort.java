@@ -14,5 +14,4 @@ public interface ProductRepositoryPort {
     Optional<Product> findByName(String name);
     Page<Product> findByCategory(String category, Pageable pageable);
     void deleteById (Long id);
-    Optional<Product> update (Long id, Product product);
 }

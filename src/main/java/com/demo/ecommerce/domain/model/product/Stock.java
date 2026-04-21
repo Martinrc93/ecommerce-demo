@@ -12,8 +12,8 @@ public record Stock(Integer stock) {
         return new Stock(amount);
     }
 
-    public static Stock updateStock(Stock stock, Integer stockToDiscount){
-        return new Stock(stock.stock - stockToDiscount);
+    public Stock updateStock(Stock stock, Integer stockToDiscount){
+        return new  Stock(stock.stock - stockToDiscount);
     }
 
 }

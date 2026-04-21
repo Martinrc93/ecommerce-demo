@@ -15,5 +15,9 @@ public class DeleteProductService implements DeleteProductUseCase {
     @Override
     public void execute(Long id) {
 
+        productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found" + id));
+
+        productRepository.deleteById(id);
     }
 }

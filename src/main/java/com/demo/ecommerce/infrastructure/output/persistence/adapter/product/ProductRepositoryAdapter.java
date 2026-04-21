@@ -49,18 +49,14 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     @Override
     public Page<Product> findByCategory(String category, Pageable pageable) {
 
-        return  productRepository.findByCategory(category,pageable)
+        return productRepository.findByCategory(category, pageable)
                 .map(productMapper::toDomain);
 
     }
 
     @Override
     public void deleteById(Long id) {
-
+        productRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<Product> update(Long id, Product product) {
-        return Optional.empty();
-    }
 }

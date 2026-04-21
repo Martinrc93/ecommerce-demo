@@ -1,8 +1,10 @@
 package com.demo.ecommerce.infrastructure.input.web.mapper.product;
 
 import com.demo.ecommerce.application.port.in.product.command.CreateProductCommand;
+import com.demo.ecommerce.application.port.in.product.command.UpdateProductCommand;
 import com.demo.ecommerce.domain.model.product.Product;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.CreateProductRequest;
+import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.response.GeneralProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,6 +14,7 @@ public interface ProductDtoMapper {
 
     CreateProductCommand toCommand(CreateProductRequest request);
 
+    UpdateProductCommand toCommand(UpdateProductRequest request);
 
     @Mapping(source = "productDetail.name", target = "name")
     @Mapping(source = "productDetail.description", target = "description")

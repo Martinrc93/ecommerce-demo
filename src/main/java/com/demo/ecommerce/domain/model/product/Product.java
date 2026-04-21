@@ -36,7 +36,6 @@ public class Product {
         ProductAvailability productAvailability= ProductAvailability.of(stock,active);
 
         return new Product(productDetail,money,productAvailability);
-
     }
 
     @Builder
@@ -49,4 +48,17 @@ public class Product {
         return new Product(id,productDetail,money,productAvailability);
     }
 
-}
+    public Product update(String name,String description, String brand, String category,BigDecimal price, Integer stock, boolean active){
+
+        this.productDetail = ProductDetail.of(name,description,brand,category);
+        this.price = Money.of(price);
+        this.productAvailability = ProductAvailability.of(stock,active);
+        return this;
+    }
+
+    public Product updateStock(Integer stockToDiscount){
+        this.productAvailability.updateStock(productAvailability.stock(),stockToDiscount);
+        return this;
+    }
+
+} 

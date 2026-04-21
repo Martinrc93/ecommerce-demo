@@ -1,10 +1,14 @@
 package com.demo.ecommerce.infrastructure.input.web.controller;
 
 import com.demo.ecommerce.application.port.in.product.command.CreateProductCommand;
+import com.demo.ecommerce.application.port.in.product.command.UpdateProductCommand;
 import com.demo.ecommerce.application.port.in.product.usecase.CreateProductUseCase;
+import com.demo.ecommerce.application.port.in.product.usecase.DeleteProductUseCase;
 import com.demo.ecommerce.application.port.in.product.usecase.GetProductUseCase;
+import com.demo.ecommerce.application.port.in.product.usecase.UpdateProductUseCase;
 import com.demo.ecommerce.domain.model.product.Product;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.CreateProductRequest;
+import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.response.GeneralProductResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.product.ProductDtoMapper;
 import lombok.AllArgsConstructor;
@@ -24,6 +28,8 @@ public class ProductController {
 
     private final CreateProductUseCase createProductService;
     private final GetProductUseCase getProductService;
+    private final UpdateProductUseCase updateProductService;
+    private final DeleteProductUseCase deleteProductService;
     private final ProductDtoMapper productDtoMapper;
 
     @PostMapping()
@@ -64,6 +70,22 @@ public class ProductController {
         Page<GeneralProductResponse> response = getProductService.getByCategory(category,pageable)
                 .map(productDtoMapper::toResponse);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<GeneralProductResponse> update(@PathVariable Long id,
+                                                         @RequestBody UpdateProductRequest request){
+
+        UpdateProductCommand command = productDtoMapper.toCommand(request);
+        Product product = updateProductService.update(id,command);
+        GeneralProductResponse response = productDtoMapper.toResponse(product);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        deleteProductService.execute(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
