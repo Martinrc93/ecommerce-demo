@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 public record Money(BigDecimal money) {
 
     public Money{
-        if (money.compareTo(BigDecimal.ZERO) <= 0){
+        if (money.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("Money cannot be negative");
         }
         money = money.setScale(2, RoundingMode.HALF_EVEN);

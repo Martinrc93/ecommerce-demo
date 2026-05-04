@@ -7,6 +7,8 @@ import com.demo.ecommerce.application.port.out.AuthRepositoryPort;
 import com.demo.ecommerce.application.port.out.UserRepositoryPort;
 import com.demo.ecommerce.domain.model.auth.RefreshToken;
 import com.demo.ecommerce.domain.model.user.User;
+import com.demo.ecommerce.domain.exception.auth.InvalidCredentialException;
+import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
 import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.RefreshRequest;
 import com.demo.ecommerce.infrastructure.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
@@ -25,10 +27,10 @@ public class  AuthService implements AuthUseCase {
     @Transactional
     public AuthResponse login(LoginCommand command) {
         User user = userRepository.getByEmail(command.email())
-                .orElseThrow(()-> new RuntimeException("invalid credentials")); //TODO personaliza exception.
+                .orElseThrow(InvalidCredentialException::new);
 
         if(!user.getPassword().matches(command.password())){
-            throw new RuntimeException("invalid credentials pass"); //TODO personaliza exception.
+            throw new InvalidCredentialException();
         }
         return generateToken(user);
     }
@@ -37,16 +39,15 @@ public class  AuthService implements AuthUseCase {
     @Transactional(readOnly = true)
     public AuthResponse refresh(String token) {
         RefreshToken refreshToken = authRepository.findByToken(token)
-                .orElseThrow(()-> new RuntimeException("invalid token")); //TODO exeception
+                .orElseThrow(InvalidTokenException::new);
 
-        if(refreshToken.isRevoked() || refreshToken.isExpired()){
-            throw new RuntimeException("invalid token"); //TODO exeception
+        if (refreshToken.isRevoked() || refreshToken.isExpired()) {
+            throw new InvalidTokenException();
         }
-
         authRepository.revokeByToken(token);
 
         User user = userRepository.getById(refreshToken.getUserId())
-                .orElseThrow(()-> new RuntimeException("invalid token")); //TODO exception
+                .orElseThrow(InvalidTokenException::new);
 
         return generateToken(user);
     }

@@ -1,17 +1,16 @@
 package com.demo.ecommerce.infrastructure.output.persistence.adapter.sale;
 
-import com.demo.ecommerce.application.port.in.sale.command.CreateSaleCommand;
-import com.demo.ecommerce.application.port.in.sale.command.Item;
 import com.demo.ecommerce.application.port.out.SaleRepositoryPort;
 import com.demo.ecommerce.domain.model.sale.Sale;
-import com.demo.ecommerce.domain.model.saledetail.SaleDetail;
 import com.demo.ecommerce.infrastructure.output.persistence.entity.SaleEntity;
 import com.demo.ecommerce.infrastructure.output.persistence.mapper.SaleMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +36,17 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
     public Sale findById(Long id) {
         Optional<SaleEntity> saleEntity = repository.findById(id);
         return saleEntity.map(mapper::toDomain).orElse(null);
+    }
+
+    @Override
+    public Page<Sale> findByDates(LocalDateTime starDate, LocalDateTime endDate,Pageable pageable) {
+
+        List<SaleEntity> saleEntities = repository.findByDateBetween(starDate,endDate);
+
+        List<Sale> sales = saleEntities.stream()
+                .map(mapper::toDomain)
+                .toList();
+
+        return new PageImpl<>(sales, pageable, sales.size());
     }
 }

@@ -1,12 +1,22 @@
 package com.demo.ecommerce.infrastructure.input.web.dto.auth.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+
 public record LoginRequest(
-        //@NotBlank
-        //@Email
+
+        @Email(message = "Invalid email format")
         String email,
 
-        //@NotBlank
-        //size(min = 8)
+        @NotBlank(message = "Password is required")
+        @Size(min = 8, message = "Password must be at least 8 characters long")
+        @Pattern(
+                regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+                message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        )
         String password
 ) {
 }

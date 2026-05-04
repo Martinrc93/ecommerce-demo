@@ -30,7 +30,7 @@ public class SaleDetail {
     }
 
     @Builder
-    public SaleDetail reconstitute(Long id, Long saleId, Long productId, Integer amount, Money price, BigDecimal discount)
+    public static SaleDetail reconstitute(Long id, Long saleId, Long productId, Integer amount, Money price, BigDecimal discount)
     {
         SaleDetail saleDetail = new SaleDetail();
         saleDetail.id = id;

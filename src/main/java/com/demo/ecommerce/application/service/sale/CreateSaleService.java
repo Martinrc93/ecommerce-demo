@@ -5,6 +5,7 @@ import com.demo.ecommerce.application.port.in.sale.command.Item;
 import com.demo.ecommerce.application.port.in.sale.usecase.CreateSaleUseCase;
 import com.demo.ecommerce.application.port.out.ProductRepositoryPort;
 import com.demo.ecommerce.application.port.out.SaleRepositoryPort;
+import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import com.demo.ecommerce.domain.model.product.Product;
 import com.demo.ecommerce.domain.model.sale.Sale;
 import com.demo.ecommerce.domain.model.saledetail.SaleDetail;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,8 +21,6 @@ public class CreateSaleService implements CreateSaleUseCase {
 
     private final SaleRepositoryPort repository;
     private final ProductRepositoryPort productRepository;
-
-
 
     @Override
     @Transactional
@@ -32,7 +30,7 @@ public class CreateSaleService implements CreateSaleUseCase {
 
         for (Item item : command.items()){
             Product product = productRepository.findById(item.productId())
-                    .orElseThrow(()-> new RuntimeException("not found product")); //TODO
+                    .orElseThrow(()-> new ProductIdNotFoundException(item.productId()));
             product.updateStock(item.quantity());
             productRepository.save(product);
             SaleDetail saleDetail = SaleDetail.create(product.getId(),item.quantity(),product.getPrice(),BigDecimal.ZERO);

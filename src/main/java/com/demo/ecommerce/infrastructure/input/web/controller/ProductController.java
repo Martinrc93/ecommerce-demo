@@ -11,6 +11,10 @@ import com.demo.ecommerce.infrastructure.input.web.dto.product.request.CreatePro
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.response.GeneralProductResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.product.ProductDtoMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@Tag(name = "Products", description = "Endpoints for managing products")
 @RestController
 @RequestMapping("/products")
 @AllArgsConstructor
@@ -32,8 +37,9 @@ public class ProductController {
     private final DeleteProductUseCase deleteProductService;
     private final ProductDtoMapper productDtoMapper;
 
-    @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody CreateProductRequest request) {
+    @PostMapping
+    @Operation(summary = "Create a new product",description = "Create a new product with the provided data")
+    public ResponseEntity<Void> save(@RequestBody @Valid CreateProductRequest request) {
 
         CreateProductCommand command = productDtoMapper.toCommand(request);
         Product product = createProductService.execute(command);
@@ -56,7 +62,7 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<GeneralProductResponse>> findAll(@PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<GeneralProductResponse>> findAll(@Parameter(hidden = true) @PageableDefault Pageable pageable) {
 
         Page<GeneralProductResponse> response = getProductService.getAll(pageable)
                 .map(productDtoMapper::toResponse);
@@ -65,7 +71,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<GeneralProductResponse>> findByCategory(@RequestParam String category,
-                                                                       @PageableDefault(page = 0,size = 10) Pageable pageable) {
+                                                                       @Parameter(hidden = true) @PageableDefault(page = 0,size = 10) Pageable pageable) {
 
         Page<GeneralProductResponse> response = getProductService.getByCategory(category,pageable)
                 .map(productDtoMapper::toResponse);
@@ -74,7 +80,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GeneralProductResponse> update(@PathVariable Long id,
-                                                         @RequestBody UpdateProductRequest request){
+                                                         @Valid @RequestBody UpdateProductRequest request){
 
         UpdateProductCommand command = productDtoMapper.toCommand(request);
         Product product = updateProductService.update(id,command);

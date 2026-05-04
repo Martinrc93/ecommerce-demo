@@ -17,7 +17,7 @@ public class SaleDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sale_id",nullable = false)
+    @Column(name = "sale_id", insertable = false, updatable = false)
     private Long saleId;
 
     @Column(name = "product_id",nullable = false)

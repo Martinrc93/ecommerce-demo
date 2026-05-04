@@ -2,6 +2,8 @@ package com.demo.ecommerce.application.service.product;
 
 import com.demo.ecommerce.application.port.in.product.usecase.GetProductUseCase;
 import com.demo.ecommerce.application.port.out.ProductRepositoryPort;
+import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
+import com.demo.ecommerce.domain.exception.product.ProductNameNotFoundException;
 import com.demo.ecommerce.domain.model.product.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,13 +19,13 @@ public class GetProductService implements GetProductUseCase {
     @Override
     public Product getById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow( ()-> new RuntimeException("Product not found" + id)); //TODO exp
+                .orElseThrow(() -> new ProductIdNotFoundException(id));
     }
 
     @Override
     public Product getByName(String name) {
         return productRepository.findByName(name)
-                .orElseThrow( ()-> new RuntimeException("Product not found" + name)); //TODO
+                .orElseThrow(() -> new ProductNameNotFoundException(name));
     }
 
     @Override
