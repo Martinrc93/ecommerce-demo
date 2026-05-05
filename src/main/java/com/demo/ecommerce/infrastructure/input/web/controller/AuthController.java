@@ -7,6 +7,7 @@ import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.LoginRequest
 import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.RefreshRequest;
 import com.demo.ecommerce.infrastructure.input.web.mapper.product.AuthDtoMapper;
 import com.demo.ecommerce.infrastructure.security.CookieTokenService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Tag(name = "Auth", description = "Endpoints for authentication")
+@Tag(name = "Autenticación (Auth)", description = "Endpoints para el inicio y cierre de sesión, y renovación de tokens")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/auth")
@@ -30,6 +31,7 @@ public class AuthController {
     private final AuthDtoMapper authMapper;
     private final CookieTokenService cookieTokenService;
 
+    @Operation(summary = "Iniciar sesión", description = "Valida las credenciales del usuario y devuelve tokens de sesión en cookies HttpOnly.")
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest request) {
 
@@ -46,6 +48,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "Renovar token de acceso", description = "Genera nuevos tokens a partir de un refreshToken válido y los actualiza en las cookies.")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@RequestBody @Valid RefreshRequest refreshToken)
     {
@@ -60,6 +63,7 @@ public class AuthController {
                 .body(tokens);
     }
 
+    @Operation(summary = "Cerrar sesión", description = "Invalida el refreshToken actual para finalizar la sesión del usuario de forma segura.")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody @Valid RefreshRequest refreshToken) {
         authService.logout(refreshToken);

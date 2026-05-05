@@ -29,7 +29,7 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
 
     @Override
     public Page<Sale> findAll(Pageable pageable) {
-        return null;
+        return repository.findAll(pageable).map(mapper::toDomain);
     }
 
     @Override

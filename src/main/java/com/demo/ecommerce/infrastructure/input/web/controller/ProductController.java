@@ -25,7 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-@Tag(name = "Products", description = "Endpoints for managing products")
+@Tag(name = "Productos (Products)", description = "Operaciones CRUD para la gestión del catálogo de productos")
 @RestController
 @RequestMapping("/products")
 @AllArgsConstructor
@@ -37,8 +37,8 @@ public class ProductController {
     private final DeleteProductUseCase deleteProductService;
     private final ProductDtoMapper productDtoMapper;
 
+    @Operation(summary = "Crear un nuevo producto", description = "Añade un nuevo producto al catálogo con la información proporcionada.")
     @PostMapping
-    @Operation(summary = "Create a new product",description = "Create a new product with the provided data")
     public ResponseEntity<Void> save(@RequestBody @Valid CreateProductRequest request) {
 
         CreateProductCommand command = productDtoMapper.toCommand(request);
@@ -53,6 +53,7 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
 
+    @Operation(summary = "Buscar producto por ID", description = "Devuelve los detalles de un producto específico dado su ID.")
     @GetMapping("/{id}")
     public ResponseEntity<GeneralProductResponse> findById(@PathVariable Long id) {
 
@@ -61,6 +62,7 @@ public class ProductController {
 
     }
 
+    @Operation(summary = "Listar todos los productos", description = "Devuelve un listado paginado con todos los productos registrados en el sistema.")
     @GetMapping("/all")
     public ResponseEntity<Page<GeneralProductResponse>> findAll(@Parameter(hidden = true) @PageableDefault Pageable pageable) {
 
@@ -69,6 +71,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Buscar productos por categoría", description = "Devuelve un listado paginado de productos filtrados por una categoría específica.")
     @GetMapping
     public ResponseEntity<Page<GeneralProductResponse>> findByCategory(@RequestParam String category,
                                                                        @Parameter(hidden = true) @PageableDefault(page = 0,size = 10) Pageable pageable) {
@@ -78,6 +81,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Actualizar un producto", description = "Sobrescribe la información de un producto existente mediante su ID.")
     @PutMapping("/{id}")
     public ResponseEntity<GeneralProductResponse> update(@PathVariable Long id,
                                                          @Valid @RequestBody UpdateProductRequest request){
@@ -88,6 +92,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Eliminar un producto", description = "Elimina un producto del catálogo de manera permanente usando su ID.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         deleteProductService.execute(id);
