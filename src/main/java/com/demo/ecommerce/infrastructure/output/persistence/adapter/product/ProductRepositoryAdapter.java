@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -28,12 +28,14 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
     @Override
     public Page<Product> findAll(Pageable pageable) {
-        return null;
+        return productRepository.findAll(pageable)
+                .map(productMapper::toDomain);
     }
 
     @Override
     public Page<Product> findAllLowStock(Pageable pageable, Integer lowStock) {
-        return null;
+        return productRepository.findByStock(lowStock, pageable)
+                .map(productMapper::toDomain);
     }
 
     @Override
@@ -43,15 +45,14 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
 
     @Override
     public Optional<Product> findByName(String name) {
-        return Optional.empty();
+        return productRepository.findByNameContainingIgnoreCase(name)
+                .map(productMapper::toDomain);
     }
 
     @Override
     public Page<Product> findByCategory(String category, Pageable pageable) {
-
         return productRepository.findByCategory(category, pageable)
                 .map(productMapper::toDomain);
-
     }
 
     @Override
@@ -59,4 +60,17 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
         productRepository.deleteById(id);
     }
 
+    @Override
+    public List<Product> findAllById(List<Long> ids) {
+
+        List<ProductEntity> listEntity = productRepository.findAllById(ids);
+        return listEntity.stream().map(productMapper::toDomain).toList();
+    }
+
+    @Override
+    public void saveAll(List<Product> products) {
+
+        List<ProductEntity> productEntities = products.stream().map(productMapper::toEntity).toList();
+        productRepository.saveAll(productEntities);
+    }
 }

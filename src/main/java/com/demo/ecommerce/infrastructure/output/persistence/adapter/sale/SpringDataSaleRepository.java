@@ -20,4 +20,5 @@ public interface SpringDataSaleRepository extends JpaRepository<SaleEntity, Long
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
 }

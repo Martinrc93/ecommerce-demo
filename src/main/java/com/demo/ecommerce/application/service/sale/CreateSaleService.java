@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,17 +33,40 @@ public class CreateSaleService implements CreateSaleUseCase {
 
         Sale sale = Sale.create(command.userId(), BigDecimal.ZERO);
 
-        for (Item item : command.items()){
-            Product product = productRepository.findById(item.productId())
-                    .orElseThrow(()-> new ProductIdNotFoundException(item.productId()));
+        List<Long> productIds = command.items().stream()
+                .map(Item::productId)
+                .toList();
+
+        Map<Long, Product> productMap = productRepository.findAllById(productIds)
+                .stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        for (Item item : command.items()) {
+            if (!productMap.containsKey(item.productId())) {
+                throw new ProductIdNotFoundException(item.productId());
+            }
+        }
+
+        List<Product> productsToSave = new ArrayList<>();
+
+        for (Item item : command.items()) {
+            Product product = productMap.get(item.productId());
             product.updateStock(item.quantity());
-            productRepository.save(product);
-            SaleDetail saleDetail = SaleDetail.create(product.getId(),item.quantity(),product.getPrice(),BigDecimal.ZERO);
+            productsToSave.add(product);
+
+            SaleDetail saleDetail = SaleDetail.create(
+                    product.getId(),
+                    item.quantity(),
+                    product.getPrice(),
+                    BigDecimal.ZERO
+            );
             sale.addSaleDetail(saleDetail);
         }
 
+        productRepository.saveAll(productsToSave);
         return repository.save(sale);
     }
+
 
     @Override
     @Transactional
