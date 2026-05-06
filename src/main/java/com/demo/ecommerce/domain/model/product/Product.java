@@ -57,7 +57,7 @@ public class Product {
     }
 
     public Product updateStock(Integer stockToDiscount){
-        this.productAvailability.updateStock(productAvailability.stock(),stockToDiscount);
+        this.productAvailability = this.productAvailability.updateStock(stockToDiscount);
         return this;
     }
 

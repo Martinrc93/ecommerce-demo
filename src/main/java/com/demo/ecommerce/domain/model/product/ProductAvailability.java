@@ -6,7 +6,7 @@ public record ProductAvailability(Stock stock,boolean active) {
         return new ProductAvailability(Stock.of(stock), active);
     }
 
-    public ProductAvailability updateStock(Stock stock, Integer stockToDiscount){
-        return new ProductAvailability(stock.updateStock(stock,stockToDiscount),active);
+    public ProductAvailability updateStock(Integer stockToDiscount){
+        return new ProductAvailability(stock.updateStock(stockToDiscount),active);
     }
 }

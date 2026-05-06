@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Security and Environments ###
+# Excluir configuraciones de producción o archivos que puedan contener secretos locales
+src/main/resources/application-prod.properties
+src/main/resources/application-secret.properties
+*.env
+
+# Mac
+.DS_Store
