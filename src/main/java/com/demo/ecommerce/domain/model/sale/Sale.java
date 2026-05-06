@@ -48,7 +48,7 @@ public class Sale {
     }
 
     @Builder
-    public static Sale Reconstitute(Long id,UUID userId,List<SaleDetail> saleDetails, BigDecimal subtotal, BigDecimal discount, BigDecimal total){
+    public static Sale reconstitute(Long id,UUID userId,List<SaleDetail> saleDetails, BigDecimal subtotal, BigDecimal discount, BigDecimal total){
         Sale sale = new Sale();
         sale.id = id;
         sale.userId = userId;

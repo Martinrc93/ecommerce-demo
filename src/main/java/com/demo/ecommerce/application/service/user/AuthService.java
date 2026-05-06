@@ -2,6 +2,7 @@ package com.demo.ecommerce.application.service.user;
 
 import com.demo.ecommerce.application.port.in.user.command.AuthResponse;
 import com.demo.ecommerce.application.port.in.user.command.LoginCommand;
+import com.demo.ecommerce.application.port.in.user.command.RefreshCommand;
 import com.demo.ecommerce.application.port.in.user.usecase.AuthUseCase;
 import com.demo.ecommerce.application.port.out.AuthRepositoryPort;
 import com.demo.ecommerce.application.port.out.UserRepositoryPort;
@@ -9,7 +10,6 @@ import com.demo.ecommerce.domain.model.auth.RefreshToken;
 import com.demo.ecommerce.domain.model.user.User;
 import com.demo.ecommerce.domain.exception.auth.InvalidCredentialException;
 import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
-import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.RefreshRequest;
 import com.demo.ecommerce.infrastructure.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class  AuthService implements AuthUseCase {
 
     @Override
     @Transactional
-    public void logout(RefreshRequest command) {
+    public void logout(RefreshCommand command) {
         authRepository.revokeByToken(command.refreshToken());
     }
 

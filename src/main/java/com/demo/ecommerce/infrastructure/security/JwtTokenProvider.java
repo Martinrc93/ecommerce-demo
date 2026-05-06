@@ -1,7 +1,9 @@
 package com.demo.ecommerce.infrastructure.security;
 
 
+import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
 import com.demo.ecommerce.domain.model.user.User;
+import com.demo.ecommerce.infrastructure.exception.token.TokenExpirationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -48,9 +50,9 @@ public class JwtTokenProvider {
             parseClaims(token);
             return true;
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("Token expirado"); //TODO
+            throw new TokenExpirationException();
         } catch (JwtException | IllegalArgumentException e) {
-            throw new RuntimeException("Token inválido"); //TODO
+            throw new InvalidTokenException();
         }
     }
 

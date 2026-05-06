@@ -1,4 +1,4 @@
-package com.demo.ecommerce.infrastructure.input.web.mapper.product;
+package com.demo.ecommerce.infrastructure.input.web.mapper;
 
 import com.demo.ecommerce.application.port.in.product.command.CreateProductCommand;
 import com.demo.ecommerce.application.port.in.product.command.UpdateProductCommand;

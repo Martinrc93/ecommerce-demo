@@ -1,6 +1,7 @@
 package com.demo.ecommerce.infrastructure.output.persistence.adapter.sale;
 
 import com.demo.ecommerce.application.port.out.SaleRepositoryPort;
+import com.demo.ecommerce.domain.exception.sale.SaleNotFoundException;
 import com.demo.ecommerce.domain.model.sale.Sale;
 import com.demo.ecommerce.infrastructure.output.persistence.entity.SaleEntity;
 import com.demo.ecommerce.infrastructure.output.persistence.mapper.SaleMapper;
@@ -33,20 +34,13 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
     }
 
     @Override
-    public Sale findById(Long id) {
+    public Optional<Sale> findById(Long id) {
         Optional<SaleEntity> saleEntity = repository.findById(id);
-        return saleEntity.map(mapper::toDomain).orElse(null);
+        return saleEntity.map(mapper::toDomain);
     }
 
     @Override
     public Page<Sale> findByDates(LocalDateTime starDate, LocalDateTime endDate,Pageable pageable) {
-
-        List<SaleEntity> saleEntities = repository.findByDateBetween(starDate,endDate);
-
-        List<Sale> sales = saleEntities.stream()
-                .map(mapper::toDomain)
-                .toList();
-
-        return new PageImpl<>(sales, pageable, sales.size());
+        return repository.findByDateBetween(starDate,endDate,pageable).map(mapper::toDomain);
     }
 }

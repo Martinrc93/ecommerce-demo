@@ -5,7 +5,7 @@ import com.demo.ecommerce.application.port.in.sale.usecase.GetSaleUseCase;
 import com.demo.ecommerce.domain.model.sale.Sale;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.request.CreateSaleDtoRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SaleDtoResponse;
-import com.demo.ecommerce.infrastructure.input.web.mapper.product.SaleDtoMapper;
+import com.demo.ecommerce.infrastructure.input.web.mapper.SaleDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -42,9 +42,6 @@ public class SaleController {
     @GetMapping("/{id}")
     public ResponseEntity<SaleDtoResponse> getById(@PathVariable Long id) {
         Sale sale = getSaleService.getById(id);
-        if (sale == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(mapper.toResponse(sale));
     }
 

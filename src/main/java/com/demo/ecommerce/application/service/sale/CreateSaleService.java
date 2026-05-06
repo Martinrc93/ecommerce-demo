@@ -67,10 +67,4 @@ public class CreateSaleService implements CreateSaleUseCase {
         return repository.save(sale);
     }
 
-
-    @Override
-    @Transactional
-    public SaleDetail save(Item command) {
-        return null;
-    }
 }

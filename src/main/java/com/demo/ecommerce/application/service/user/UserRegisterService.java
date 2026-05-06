@@ -34,5 +34,3 @@ public class UserRegisterService implements UserRegisterUseCase {
         return new RegisterResult(savedUser.getUserName().name(), savedUser.getUserName().lastName(), accessToken,refreshToken.getToken());
     }
 }
-
-

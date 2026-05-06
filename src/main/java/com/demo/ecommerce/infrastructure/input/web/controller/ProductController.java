@@ -10,7 +10,7 @@ import com.demo.ecommerce.domain.model.product.Product;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.CreateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.response.GeneralProductResponse;
-import com.demo.ecommerce.infrastructure.input.web.mapper.product.ProductDtoMapper;
+import com.demo.ecommerce.infrastructure.input.web.mapper.ProductDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,6 +2,7 @@ package com.demo.ecommerce.application.service.sale;
 
 import com.demo.ecommerce.application.port.in.sale.usecase.GetSaleUseCase;
 import com.demo.ecommerce.application.port.out.SaleRepositoryPort;
+import com.demo.ecommerce.domain.exception.sale.SaleNotFoundException;
 import com.demo.ecommerce.domain.model.sale.Sale;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,12 +19,12 @@ public class GetSaleService implements GetSaleUseCase {
 
     @Override
     public Sale getById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id)
+                .orElseThrow(() -> new SaleNotFoundException(id.toString()));
     }
 
     @Override
     public Page<Sale> getByDates(LocalDateTime starDate, LocalDateTime endDate, Pageable pageable) {
-
 
         return repository.findByDates(starDate,endDate,pageable);
     }

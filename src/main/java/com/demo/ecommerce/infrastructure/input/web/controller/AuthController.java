@@ -5,7 +5,7 @@ import com.demo.ecommerce.application.port.in.user.command.LoginCommand;
 import com.demo.ecommerce.application.port.in.user.usecase.AuthUseCase;
 import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.LoginRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.auth.request.RefreshRequest;
-import com.demo.ecommerce.infrastructure.input.web.mapper.product.AuthDtoMapper;
+import com.demo.ecommerce.infrastructure.input.web.mapper.AuthDtoMapper;
 import com.demo.ecommerce.infrastructure.security.CookieTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,7 +66,7 @@ public class AuthController {
     @Operation(summary = "Cerrar sesión", description = "Invalida el refreshToken actual para finalizar la sesión del usuario de forma segura.")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody @Valid RefreshRequest refreshToken) {
-        authService.logout(refreshToken);
+        authService.logout(authMapper.toCommand(refreshToken));
         return ResponseEntity.noContent().build();
     }
 

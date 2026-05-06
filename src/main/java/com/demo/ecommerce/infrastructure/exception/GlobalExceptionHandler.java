@@ -4,6 +4,7 @@ import com.demo.ecommerce.domain.exception.auth.InvalidCredentialException;
 import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
 import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import com.demo.ecommerce.domain.exception.product.ProductNameNotFoundException;
+import com.demo.ecommerce.infrastructure.exception.token.TokenExpirationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -70,4 +71,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(TokenExpirationException.class)
+    public ResponseEntity<ErrorResponse> handleTokenExpirationException(TokenExpirationException ex){
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 }
