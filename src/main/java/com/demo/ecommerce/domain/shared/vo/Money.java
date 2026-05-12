@@ -19,8 +19,8 @@ public record Money(BigDecimal money) {
         return new Money(this.money.add(money.money));
     }
 
-    public Money applyDiscount(Money money ,Discount discount){
-        BigDecimal moneyWithDiscount = money.money.multiply(discount.discount()).setScale(2, RoundingMode.HALF_EVEN);
-        return  new Money(moneyWithDiscount);
+    public Money applyDiscount(Discount discount){
+        BigDecimal moneyWithDiscount = this.money.multiply(BigDecimal.ONE.subtract(discount.discount())).setScale(2, RoundingMode.HALF_EVEN);
+        return new Money(moneyWithDiscount);
     }
 }

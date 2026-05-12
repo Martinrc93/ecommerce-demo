@@ -18,8 +18,8 @@ public interface ProductDtoMapper {
 
     @Mapping(source = "productDetail.name", target = "name")
     @Mapping(source = "productDetail.description", target = "description")
-    @Mapping(source = "productDetail.brand", target = "brand")
-    @Mapping(source = "productDetail.category", target = "category")
+    @Mapping(source = "productDetail.brand.name", target = "brand")
+    @Mapping(source = "productDetail.category.name", target = "category")
     @Mapping(source = "price.money", target = "price")
     @Mapping(source = "productAvailability.stock.stock", target = "stock")
     @Mapping(source = "productAvailability.active", target = "active")

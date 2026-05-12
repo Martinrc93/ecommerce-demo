@@ -1,6 +1,5 @@
 package com.demo.ecommerce.domain.model.saledetail;
 
-import com.demo.ecommerce.domain.model.product.Product;
 import com.demo.ecommerce.domain.shared.vo.Money;
 import lombok.AccessLevel;
 import lombok.Builder;

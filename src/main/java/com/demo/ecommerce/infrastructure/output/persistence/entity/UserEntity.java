@@ -26,7 +26,7 @@ public class UserEntity {
     @Column(name = "last_name", length = 30)
     private String lastName;
 
-    @Column(name = "email",nullable = false, length = 255)
+    @Column(name = "email",nullable = false, length = 255, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)

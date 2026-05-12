@@ -10,7 +10,7 @@ public record Discount(BigDecimal discount) {
             throw new IllegalArgumentException("Discount must be between 0 and 100");
         }
 
-        discount = discount.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN).add(BigDecimal.ONE);
+        discount = discount.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
     }
 
     public static Discount of(BigDecimal discount){

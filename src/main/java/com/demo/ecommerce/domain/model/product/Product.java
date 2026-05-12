@@ -29,9 +29,9 @@ public class Product {
         this.productAvailability = productAvailability;
     }
 
-    public static Product create(String name,String description, String brand, String category,BigDecimal price, Integer stock, boolean active){
+    public static Product create(String name,String description, Brand brand, Category category,BigDecimal price, Integer stock, boolean active){
 
-        ProductDetail productDetail = ProductDetail.of(name,description,brand,category);
+        ProductDetail productDetail = new ProductDetail(name,description,brand,category);
         Money money = com.demo.ecommerce.domain.shared.vo.Money.of(price);
         ProductAvailability productAvailability= ProductAvailability.of(stock,active);
 
@@ -39,18 +39,18 @@ public class Product {
     }
 
     @Builder
-    public static Product reconstitute(Long id,String name,String description, String brand, String category,BigDecimal price, Integer stock, boolean active){
+    public static Product reconstitute(Long id,String name,String description, Brand brand, Category category,BigDecimal price, Integer stock, boolean active){
 
-        ProductDetail productDetail = ProductDetail.of(name,description,brand,category);
+        ProductDetail productDetail = new ProductDetail(name,description,brand,category);
         Money money = com.demo.ecommerce.domain.shared.vo.Money.of(price);
         ProductAvailability productAvailability= ProductAvailability.of(stock,active);
 
         return new Product(id,productDetail,money,productAvailability);
     }
 
-    public Product update(String name,String description, String brand, String category,BigDecimal price, Integer stock, boolean active){
+    public Product update(String name,String description, Brand brand, Category category,BigDecimal price, Integer stock, boolean active){
 
-        this.productDetail = ProductDetail.of(name,description,brand,category);
+        this.productDetail = new ProductDetail(name,description,brand,category);
         this.price = Money.of(price);
         this.productAvailability = ProductAvailability.of(stock,active);
         return this;

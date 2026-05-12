@@ -31,12 +31,13 @@ public class ProductEntity extends Auditable{
     @Size(min = 10, max = 255)
     private String description;
 
-    @Column(nullable = false)
-    @Size(min = 3, max = 50)
-    private String brand;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "brand_id", nullable = false)
+    private BrandEntity brand;
 
-    @Column(nullable = false)
-    private String category;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryEntity category;
 
     @Column(nullable = false)
     @Positive

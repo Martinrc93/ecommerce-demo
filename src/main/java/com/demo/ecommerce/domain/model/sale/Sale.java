@@ -42,7 +42,7 @@ public class Sale {
         Money detailMoney = Money.of(detailTotal);
 
         this.subTotal = this.subTotal.sum(detailMoney);
-        this.total = this.subTotal.applyDiscount(this.subTotal, this.discount);
+        this.total = this.subTotal.applyDiscount(this.discount);
 
         return this;
     }
