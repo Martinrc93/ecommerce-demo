@@ -21,4 +21,5 @@ public record Brand(Long id, String name) {
     public static Brand of(Long id,String name){
         return new Brand(id, name);
     }
+
 }

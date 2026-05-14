@@ -1,5 +1,6 @@
 package com.demo.ecommerce.infrastructure.input.web.controller;
 
+import com.demo.ecommerce.application.port.in.category.command.CreateCategoryCommand;
 import com.demo.ecommerce.application.port.in.category.usecase.CreateCategoryUseCase;
 import com.demo.ecommerce.application.port.in.category.usecase.DeleteCategoryUseCase;
 import com.demo.ecommerce.application.port.in.category.usecase.GetCategoryUseCase;
@@ -61,6 +62,16 @@ public class CategoryController {
     public ResponseEntity<Void> delete(@PathVariable Long id){
         deleteCategoryUseCase.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<CategoryDtoResponse> update(@RequestBody CategoryDtoRequest request,
+                                                      @PathVariable Long id) {
+
+        CreateCategoryCommand command = categoryDtoMapper.toCommand(request);
+        Category category = updateCategoryUseCase.execute(id,command);
+        CategoryDtoResponse response = categoryDtoMapper.toResponse(category);
+        return ResponseEntity.ok(response);
     }
 
 }

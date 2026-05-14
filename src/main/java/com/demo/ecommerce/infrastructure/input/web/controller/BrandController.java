@@ -85,13 +85,20 @@ public class BrandController {
         return ResponseEntity.ok(response);
     }
 
-    /*
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        deleteBrandService.execute(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<BrandDtoResponse> update(@PathVariable Long id,
                                                    @RequestBody BrandDtoRequest request) {
 
-                return
+        CreateBrandCommand command = brandDtoMapper.toCommand(request);
+        Brand brand = updateBrandService.execute(id,command);
+        BrandDtoResponse response = brandDtoMapper.toResponse(brand);
+        return ResponseEntity.ok(response);
     }
-     */
 
 }

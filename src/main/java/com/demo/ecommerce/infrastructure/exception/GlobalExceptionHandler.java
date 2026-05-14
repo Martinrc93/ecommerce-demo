@@ -2,6 +2,7 @@ package com.demo.ecommerce.infrastructure.exception;
 
 import com.demo.ecommerce.domain.exception.auth.InvalidCredentialException;
 import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
+import com.demo.ecommerce.domain.exception.category.CategoryNotFoundException;
 import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import com.demo.ecommerce.domain.exception.product.ProductNameNotFoundException;
 import com.demo.ecommerce.infrastructure.exception.token.TokenExpirationException;
@@ -123,4 +124,16 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryNotFound(CategoryNotFoundException ex, HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
 }

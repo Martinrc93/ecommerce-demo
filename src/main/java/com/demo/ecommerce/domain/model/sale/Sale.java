@@ -58,4 +58,5 @@ public class Sale {
         sale.total = Money.of(total);
         return sale;
     }
+
 }
