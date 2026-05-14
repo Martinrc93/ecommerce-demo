@@ -1,5 +1,7 @@
 package com.demo.ecommerce.domain.model.user.vo;
 
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
+
 import java.util.regex.Pattern;
 
 public record Email(String email) {
@@ -8,7 +10,7 @@ public record Email(String email) {
 
     public static Email of(String email) {
         if (email == null || !PATTERN.matcher(email).matches())
-            throw new IllegalArgumentException("Email inválido: " + email);
+            throw new InvalidValueObjectException("Email invalid: " + email);
         return new Email(email.toLowerCase());
     }
 

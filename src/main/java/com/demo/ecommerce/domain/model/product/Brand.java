@@ -1,14 +1,16 @@
 package com.demo.ecommerce.domain.model.product;
 
-public record Brand(Long id,String name) {
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
+
+public record Brand(Long id, String name) {
 
     public Brand{
 
         if ( name==null || name.isEmpty()){
-            throw new IllegalArgumentException("El nombre de la marca no puede estar vacio");
+            throw new InvalidValueObjectException("brand name cannot be null or empty");
         }
         if (name.length() <= 3 || name.length() >= 30){
-            throw new IllegalArgumentException("El nombre de la marca debe tener entre 3 y 30 caracteres");
+            throw new InvalidValueObjectException("brand name must be between 3 and 30 characters");
         }
     }
 

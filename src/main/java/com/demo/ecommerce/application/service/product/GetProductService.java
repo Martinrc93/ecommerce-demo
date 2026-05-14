@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 public class GetProductService implements GetProductUseCase {
@@ -29,12 +31,8 @@ public class GetProductService implements GetProductUseCase {
     }
 
     @Override
-    public Page<Product> getAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<Product> getAll(String category, String brand, BigDecimal minPrice, BigDecimal maxPrice, Boolean active, Pageable pageable) {
+        return productRepository.findAll(category, brand, minPrice, maxPrice, active, pageable);
     }
 
-    @Override
-    public Page<Product> getByCategory(String category, Pageable pageable) {
-        return productRepository.findByCategory(category, pageable);
-    }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +28,8 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     }
 
     @Override
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable)
+    public Page<Product> findAll(String category, String brand, BigDecimal minPrice, BigDecimal maxPrice, Boolean active, Pageable pageable) {
+        return productRepository.findByFilters(category, brand, minPrice, maxPrice, active, pageable)
                 .map(productMapper::toDomain);
     }
 
@@ -50,12 +51,6 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     }
 
     @Override
-    public Page<Product> findByCategory(String category, Pageable pageable) {
-        return productRepository.findByCategory(category, pageable)
-                .map(productMapper::toDomain);
-    }
-
-    @Override
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
@@ -64,6 +59,12 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     public List<Product> findAllById(List<Long> ids) {
 
         List<ProductEntity> listEntity = productRepository.findAllById(ids);
+        return listEntity.stream().map(productMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Product> findAllByIdsWithPessimisticLock(List<Long> ids) {
+        List<ProductEntity> listEntity = productRepository.findAllByIdsWithPessimisticLock(ids);
         return listEntity.stream().map(productMapper::toDomain).toList();
     }
 

@@ -2,6 +2,8 @@ package com.demo.ecommerce.infrastructure.input.web.dto.product.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
+
 @Schema(description = "Datos para actualizar parcialmente un producto")
 public record UpdateProductRequest(
 
@@ -21,7 +23,7 @@ public record UpdateProductRequest(
         Integer stock,
 
         @Schema(description = "Precio unitario del producto", example = "129.99")
-        Double price,
+        BigDecimal price,
 
         @Schema(description = "Indica si el producto está visible y disponible para compra", example = "true")
         boolean active

@@ -1,15 +1,17 @@
 package com.demo.ecommerce.domain.model.product;
 
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
+
 public record Category(Long id, String name) {
 
     public Category{
 
         if ( name==null || name.isEmpty()){
-            throw new IllegalArgumentException("El nombre de la categoria no puede estar vacio");
+            throw new InvalidValueObjectException("Category name cannot be null or empty");
         }
 
         if (name.length() <= 3 || name.length() >= 30){
-            throw new IllegalArgumentException("El nombre de la categoria debe tener entre 3 y 30 caracteres");
+            throw new InvalidValueObjectException("Category name must be between 3 and 30 characters");
         }
 
     }

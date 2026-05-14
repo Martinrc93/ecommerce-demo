@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 
 @Tag(name = "Productos (Products)", description = "Operaciones CRUD para la gestión del catálogo de productos")
@@ -62,21 +63,17 @@ public class ProductController {
 
     }
 
-    @Operation(summary = "Listar todos los productos", description = "Devuelve un listado paginado con todos los productos registrados en el sistema.")
+    @Operation(summary = "Listar todos los productos", description = "Devuelve un listado paginado con todos los productos registrados en el sistema filtrando opcionalmente por categoría, marca, precio y estado.")
     @GetMapping("/all")
-    public ResponseEntity<Page<GeneralProductResponse>> findAll(@Parameter(hidden = true) @PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<GeneralProductResponse>> findAll(
+                                                                @RequestParam(required = false) String category,
+                                                                @RequestParam(required = false) String brand,
+                                                                @RequestParam(required = false) BigDecimal minPrice,
+                                                                @RequestParam(required = false) BigDecimal maxPrice,
+                                                                @RequestParam(required = false) Boolean active,
+                                                                @Parameter(hidden = true) @PageableDefault(size = 10, page = 0, sort = "id") Pageable pageable) {
 
-        Page<GeneralProductResponse> response = getProductService.getAll(pageable)
-                .map(productDtoMapper::toResponse);
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "Buscar productos por categoría", description = "Devuelve un listado paginado de productos filtrados por una categoría específica.")
-    @GetMapping
-    public ResponseEntity<Page<GeneralProductResponse>> findByCategory(@RequestParam String category,
-                                                                       @Parameter(hidden = true) @PageableDefault(page = 0,size = 10) Pageable pageable) {
-
-        Page<GeneralProductResponse> response = getProductService.getByCategory(category,pageable)
+        Page<GeneralProductResponse> response = getProductService.getAll(category, brand, minPrice, maxPrice, active, pageable)
                 .map(productDtoMapper::toResponse);
         return ResponseEntity.ok(response);
     }

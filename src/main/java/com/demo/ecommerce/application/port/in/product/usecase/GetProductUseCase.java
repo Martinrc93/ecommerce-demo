@@ -4,9 +4,10 @@ import com.demo.ecommerce.domain.model.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+
 public interface GetProductUseCase {
     Product getById(Long id);
     Product getByName(String name);
-    Page<Product> getAll(Pageable pageable);
-    Page<Product> getByCategory(String category, Pageable pageable);
+    Page<Product> getAll(String category, String brand, BigDecimal minPrice, BigDecimal maxPrice, Boolean active, Pageable pageable);
 }

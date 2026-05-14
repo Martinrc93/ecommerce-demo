@@ -1,11 +1,12 @@
 package com.demo.ecommerce.domain.model.user.vo;
 
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public record HashedPassword (String password) {
 
     public static HashedPassword of (String pass){
-        if (pass == null || pass.length() <8 ) throw new RuntimeException("error in validation pass"); //TODO crear bien la exepcion
+        if (pass == null || pass.length() <8 ) throw new InvalidValueObjectException("Password must contain a minimum of 8 characters");
 
         return new HashedPassword(BCrypt.hashpw(pass, BCrypt.gensalt()));
     }

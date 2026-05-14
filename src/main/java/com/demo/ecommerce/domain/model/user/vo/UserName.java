@@ -1,10 +1,12 @@
 package com.demo.ecommerce.domain.model.user.vo;
 
-public record UserName(String name,String lastName) {
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
+
+public record UserName(String name, String lastName) {
 
     public UserName{
-        if (name == null || name.isBlank() ) throw new RuntimeException(""); //TODO personalizar excepcion
-        if (lastName == null || lastName.isBlank() ) throw new RuntimeException(""); //TODO personalizar excepcion
+        if (name == null || name.isBlank() ) throw new InvalidValueObjectException("Name cannot be null or empty");
+        if (lastName == null || lastName.isBlank() ) throw new InvalidValueObjectException("lastname cannot be null or empty");
 
         name = name.trim();
         lastName = lastName.trim();

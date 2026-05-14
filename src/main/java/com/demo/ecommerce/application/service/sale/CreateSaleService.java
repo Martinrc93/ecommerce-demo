@@ -37,7 +37,8 @@ public class CreateSaleService implements CreateSaleUseCase {
                 .map(Item::productId)
                 .toList();
 
-        Map<Long, Product> productMap = productRepository.findAllById(productIds)
+
+        Map<Long, Product> productMap = productRepository.findAllByIdsWithPessimisticLock(productIds)
                 .stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
 
@@ -51,6 +52,7 @@ public class CreateSaleService implements CreateSaleUseCase {
 
         for (Item item : command.items()) {
             Product product = productMap.get(item.productId());
+
             product.updateStock(item.quantity());
             productsToSave.add(product);
 
