@@ -12,13 +12,13 @@ import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdatePro
 import com.demo.ecommerce.infrastructure.input.web.dto.product.response.GeneralProductResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.ProductDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -66,12 +66,19 @@ public class ProductController {
     @Operation(summary = "Listar todos los productos", description = "Devuelve un listado paginado con todos los productos registrados en el sistema filtrando opcionalmente por categoría, marca, precio y estado.")
     @GetMapping("/all")
     public ResponseEntity<Page<GeneralProductResponse>> findAll(
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size,
+                                                                @RequestParam(defaultValue = "id") String sortBy,
+                                                                @RequestParam(defaultValue = "asc") String sortDirection,
                                                                 @RequestParam(required = false) String category,
                                                                 @RequestParam(required = false) String brand,
                                                                 @RequestParam(required = false) BigDecimal minPrice,
                                                                 @RequestParam(required = false) BigDecimal maxPrice,
-                                                                @RequestParam(required = false) Boolean active,
-                                                                @Parameter(hidden = true) @PageableDefault(size = 10, page = 0, sort = "id") Pageable pageable) {
+                                                                @RequestParam(required = false) Boolean active) {
+
+        Sort sort = sortDirection.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page,size,sort);
 
         Page<GeneralProductResponse> response = getProductService.getAll(category, brand, minPrice, maxPrice, active, pageable)
                 .map(productDtoMapper::toResponse);
