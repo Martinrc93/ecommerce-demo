@@ -15,13 +15,19 @@ public class SaleDetail {
     private Long id;
     private Long saleId;
     private Long productId;
+    private String productName;
+    private String brandName;
+    private String categoryName;
     private Integer amount;
     private Money price;
     private BigDecimal discount;
 
-    public static SaleDetail create(Long productId, Integer amount, Money price, BigDecimal discount){
+    public static SaleDetail create(Long productId, String productName, String brandName, String categoryName, Integer amount, Money price, BigDecimal discount){
         SaleDetail saleDetail = new SaleDetail();
         saleDetail.productId = productId;
+        saleDetail.productName = productName;
+        saleDetail.brandName = brandName;
+        saleDetail.categoryName = categoryName;
         saleDetail.amount = amount;
         saleDetail.price = price;
         saleDetail.discount = discount;
@@ -29,12 +35,15 @@ public class SaleDetail {
     }
 
     @Builder
-    public static SaleDetail reconstitute(Long id, Long saleId, Long productId, Integer amount, Money price, BigDecimal discount)
+    public static SaleDetail reconstitute(Long id, Long saleId, Long productId, String productName, String brandName, String categoryName, Integer amount, Money price, BigDecimal discount)
     {
         SaleDetail saleDetail = new SaleDetail();
         saleDetail.id = id;
         saleDetail.saleId = saleId;
         saleDetail.productId = productId;
+        saleDetail.productName = productName;
+        saleDetail.brandName = brandName;
+        saleDetail.categoryName = categoryName;
         saleDetail.amount = amount;
         saleDetail.price = price;
         saleDetail.discount = discount;

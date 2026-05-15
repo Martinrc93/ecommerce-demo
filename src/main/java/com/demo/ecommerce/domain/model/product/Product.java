@@ -17,6 +17,8 @@ public class Product {
     private Money price;
     private ProductAvailability productAvailability;
 
+    private Long version;
+
     private Product(ProductDetail productDetail, Money price, ProductAvailability productAvailability){
         this.productDetail = productDetail;
         this.price = price;
@@ -39,13 +41,16 @@ public class Product {
     }
 
     @Builder
-    public static Product reconstitute(Long id,String name,String description, Brand brand, Category category,BigDecimal price, Integer stock, boolean active){
+    public static Product reconstitute(Long id,String name,String description, Brand brand, Category category,BigDecimal price, Integer stock, boolean active,Long version){
 
         ProductDetail productDetail = new ProductDetail(name,description,brand,category);
         Money money = com.demo.ecommerce.domain.shared.vo.Money.of(price);
         ProductAvailability productAvailability= ProductAvailability.of(stock,active);
 
-        return new Product(id,productDetail,money,productAvailability);
+        Product product = new Product(id,productDetail,money,productAvailability);
+        product.version = version;
+
+        return product;
     }
 
     public Product update(String name,String description, Brand brand, Category category,BigDecimal price, Integer stock, boolean active){

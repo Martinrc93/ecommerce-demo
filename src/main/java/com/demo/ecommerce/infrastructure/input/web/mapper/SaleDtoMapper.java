@@ -27,8 +27,8 @@ public interface SaleDtoMapper {
 
     @Mapping(target = "quantity", source = "amount")
     @Mapping(target = "price", source = "price.money")
-    @Mapping(target = "name", ignore = true)
-    @Mapping(target = "description", ignore = true)
-    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "name", source = "productName")
+    @Mapping(target = "brand", source = "brandName")
+    @Mapping(target = "category", source = "categoryName")
     ItemsResponse toItemsResponse(SaleDetail saleDetail);
 }

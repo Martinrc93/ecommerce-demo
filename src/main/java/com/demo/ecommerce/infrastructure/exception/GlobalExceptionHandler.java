@@ -3,8 +3,10 @@ package com.demo.ecommerce.infrastructure.exception;
 import com.demo.ecommerce.domain.exception.auth.InvalidCredentialException;
 import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
 import com.demo.ecommerce.domain.exception.category.CategoryNotFoundException;
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import com.demo.ecommerce.domain.exception.product.ProductNameNotFoundException;
+import com.demo.ecommerce.domain.exception.sale.SaleNotFoundException;
 import com.demo.ecommerce.infrastructure.exception.token.TokenExpirationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -134,6 +136,28 @@ public class GlobalExceptionHandler {
                 request.getRequestURI());
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SaleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSaleNotFound(SaleNotFoundException ex, HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidValueObjectException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidValueObject(InvalidValueObjectException ex, HttpServletRequest request){
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }

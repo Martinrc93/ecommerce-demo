@@ -37,7 +37,6 @@ public class CreateSaleService implements CreateSaleUseCase {
                 .map(Item::productId)
                 .toList();
 
-
         Map<Long, Product> productMap = productRepository.findAllByIdsWithPessimisticLock(productIds)
                 .stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
@@ -58,6 +57,9 @@ public class CreateSaleService implements CreateSaleUseCase {
 
             SaleDetail saleDetail = SaleDetail.create(
                     product.getId(),
+                    product.getProductDetail().name(),
+                    product.getProductDetail().brand().name(),
+                    product.getProductDetail().category().name(),
                     item.quantity(),
                     product.getPrice(),
                     BigDecimal.ZERO

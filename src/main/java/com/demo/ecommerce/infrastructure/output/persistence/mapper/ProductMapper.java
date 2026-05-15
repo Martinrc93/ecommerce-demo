@@ -19,7 +19,10 @@ public interface ProductMapper {
     @Mapping(source = "price.money", target = "price")
     @Mapping(source = "productAvailability.stock.stock", target = "stock")
     @Mapping(source = "productAvailability.active", target = "active")
-    ProductEntity toEntity(Product product);
+    @Mapping(source = "version", target = "version")
+    ProductEntity toEntity(Product product); //TODO separar map de brand y category
+
+
 
     default Product toDomain(ProductEntity entity) {
         if (entity == null) {
@@ -37,7 +40,8 @@ public interface ProductMapper {
                 category,
                 entity.getPrice(),
                 entity.getStock(),
-                entity.isActive()
+                entity.isActive(),
+                entity.getVersion()
         );
     }
 }

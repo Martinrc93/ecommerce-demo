@@ -9,8 +9,8 @@ public record ItemsResponse(
         @Schema(description = "Nombre del producto", example = "Zapatillas Running", nullable = true)
         String name,
 
-        @Schema(description = "Descripción del producto", example = "Zapatillas ligeras para correr", nullable = true)
-        String description,
+        @Schema(description = "", example = "Nike", nullable = true)
+        String brand,
 
         @Schema(description = "Categoría a la que pertenece el producto", example = "Calzado", nullable = true)
         String category,

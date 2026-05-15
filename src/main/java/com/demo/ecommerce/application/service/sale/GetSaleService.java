@@ -21,6 +21,8 @@ public class GetSaleService implements GetSaleUseCase {
     public Sale getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new SaleNotFoundException(id.toString()));
+
+
     }
 
     @Override
