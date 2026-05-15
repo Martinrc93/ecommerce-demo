@@ -7,6 +7,7 @@ import com.demo.ecommerce.infrastructure.input.web.dto.sale.request.CreateSaleDt
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SaleDtoResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.SaleDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,13 +48,23 @@ public class SaleController {
 
     @Operation(summary = "Buscar ventas por fechas", description = "Devuelve un listado paginado de ventas realizadas dentro de un rango de fechas.")
     @GetMapping
-    public ResponseEntity<Page<SaleDtoResponse>> getByDates(@RequestParam String startDate, @RequestParam String endDate,
-                                                 @RequestParam(defaultValue = "0")  int page,
-                                                 @RequestParam(defaultValue = "10")  int size){
+    public ResponseEntity<Page<SaleDtoResponse>> getByDates(
+                                                    @Parameter(description = "YYYY-MM-DD") @RequestParam (required = false) String startDate,
+                                                    @Parameter(description = "YYYY-MM-DD") @RequestParam (required = false) String endDate,
+                                                    @RequestParam(defaultValue = "0")  int page,
+                                                    @RequestParam(defaultValue = "10")  int size){
 
         Pageable pageable = PageRequest.of(page, size);
-        LocalDateTime sDate = LocalDate.parse(startDate).atStartOfDay();
-        LocalDateTime eDate = LocalDate.parse(endDate).atTime(LocalTime.MAX);
+        LocalDateTime sDate;
+        LocalDateTime eDate;
+
+        if (startDate == null || endDate == null) {
+            sDate = LocalDate.now().atStartOfDay();
+            eDate = LocalDate.now().atTime(LocalTime.MAX);
+        }else{
+            sDate = LocalDate.parse(startDate).atStartOfDay();
+            eDate = LocalDate.parse(endDate).atTime(LocalTime.MAX);
+        }
 
         Page<Sale> sales = getSaleService.getByDates(sDate,eDate,pageable);
 
