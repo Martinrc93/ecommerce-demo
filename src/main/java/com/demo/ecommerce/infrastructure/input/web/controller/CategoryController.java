@@ -12,8 +12,9 @@ import com.demo.ecommerce.infrastructure.input.web.mapper.CategoryDtoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +45,14 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<CategoryDtoResponse>> findAll(@PageableDefault(size = 10, page = 0)
-                                                             Pageable pageable){
+    public ResponseEntity<Page<CategoryDtoResponse>> findAll(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam(defaultValue = "asc") String sortBy){
+
+
+        Sort sort = sortBy.equals("asc") ? Sort.by("name").ascending() : Sort.by("name").descending();
+
+        Pageable pageable = PageRequest.of(page,size,sort);
 
         Page<CategoryDtoResponse> response = getCategoryUseCase.getAll(pageable)
                 .map(categoryDtoMapper::toResponse);

@@ -7,12 +7,11 @@ import com.demo.ecommerce.application.port.in.product.usecase.DeleteProductUseCa
 import com.demo.ecommerce.application.port.in.product.usecase.GetProductUseCase;
 import com.demo.ecommerce.application.port.in.product.usecase.UpdateProductUseCase;
 import com.demo.ecommerce.domain.model.product.Product;
+import com.demo.ecommerce.infrastructure.input.web.controller.docs.ProductApiDocs;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.CreateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.response.GeneralProductResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.ProductDtoMapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,11 +25,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.math.BigDecimal;
 import java.net.URI;
 
-@Tag(name = "Productos (Products)", description = "Operaciones CRUD para la gestión del catálogo de productos")
 @RestController
 @RequestMapping("/products")
 @AllArgsConstructor
-public class ProductController {
+public class ProductController implements ProductApiDocs {
 
     private final CreateProductUseCase createProductService;
     private final GetProductUseCase getProductService;
@@ -38,7 +36,7 @@ public class ProductController {
     private final DeleteProductUseCase deleteProductService;
     private final ProductDtoMapper productDtoMapper;
 
-    @Operation(summary = "Crear un nuevo producto", description = "Añade un nuevo producto al catálogo con la información proporcionada.")
+    @Override
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid CreateProductRequest request) {
 
@@ -54,7 +52,7 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
 
-    @Operation(summary = "Buscar producto por ID", description = "Devuelve los detalles de un producto específico dado su ID.")
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<GeneralProductResponse> findById(@PathVariable Long id) {
 
@@ -63,7 +61,7 @@ public class ProductController {
 
     }
 
-    @Operation(summary = "Listar todos los productos", description = "Devuelve un listado paginado con todos los productos registrados en el sistema filtrando opcionalmente por categoría, marca, precio y estado.")
+    @Override
     @GetMapping("/all")
     public ResponseEntity<Page<GeneralProductResponse>> findAll(
                                                                 @RequestParam(defaultValue = "0") int page,
@@ -85,7 +83,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Actualizar un producto", description = "Sobrescribe la información de un producto existente mediante su ID.")
+    @Override
     @PutMapping("/{id}")
     public ResponseEntity<GeneralProductResponse> update(@PathVariable Long id,
                                                          @Valid @RequestBody UpdateProductRequest request){
@@ -96,7 +94,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Eliminar un producto", description = "Elimina un producto del catálogo de manera permanente usando su ID.")
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         deleteProductService.execute(id);

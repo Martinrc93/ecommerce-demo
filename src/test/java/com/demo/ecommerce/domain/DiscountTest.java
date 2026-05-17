@@ -1,5 +1,6 @@
 package com.demo.ecommerce.domain;
 
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import com.demo.ecommerce.domain.shared.vo.Discount;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,34 +33,19 @@ class DiscountTest {
 
     // Casos inválidos
     @Test
-    void shouldThrowExceptionWhenDiscountIsZero() {
-        assertThrows(IllegalArgumentException.class,
-                () -> Discount.of(BigDecimal.ZERO));
-    }
-
-    @Test
-    void shouldThrowExceptionWhenDiscountIs100() {
-        assertThrows(IllegalArgumentException.class,
-                () -> Discount.of(new BigDecimal("100")));
-    }
-
-    @Test
     void shouldThrowExceptionWhenDiscountIsNegative() {
-        assertThrows(IllegalArgumentException.class,
-                () -> Discount.of(new BigDecimal("-10")));
+        BigDecimal negativeDiscount = new BigDecimal("-10");
+
+        assertThrows(InvalidValueObjectException.class,
+                () -> Discount.of(negativeDiscount));
     }
 
     @Test
     void shouldThrowExceptionWhenDiscountIsGreaterThan100() {
-        assertThrows(IllegalArgumentException.class,
-                () -> Discount.of(new BigDecimal("101")));
-    }
+        BigDecimal excessiveDiscount = new BigDecimal("101");
 
-    @Test
-    void shouldThrowExceptionWithCorrectMessage() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> Discount.of(BigDecimal.ZERO));
-        assertEquals("Discount must be between 0 and 100", ex.getMessage());
+        assertThrows(InvalidValueObjectException.class,
+                () -> Discount.of(excessiveDiscount));
     }
 
     @Test

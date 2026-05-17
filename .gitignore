@@ -33,8 +33,7 @@ build/
 .vscode/
 
 ### Security and Environments ###
-# Excluir configuraciones de producciÃ³n o archivos que puedan contener secretos locales
-src/main/resources/application-prod.properties
+# Excluir configuraciones de producción o archivos que puedan contener secretos locales
 src/main/resources/application-secret.properties
 *.env
 

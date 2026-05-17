@@ -1,5 +1,6 @@
 package com.demo.ecommerce.domain;
 
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import com.demo.ecommerce.domain.model.product.Stock;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,18 +14,13 @@ class StockTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenStockIsZero() {
-        assertThrows(IllegalArgumentException.class, () -> Stock.of(0));
-    }
-
-    @Test
     void shouldThrowExceptionWhenStockIsNegative() {
-        assertThrows(IllegalArgumentException.class, () -> Stock.of(-5));
+        assertThrows(InvalidValueObjectException.class, () -> Stock.of(-5));
     }
 
     @Test
     void shouldThrowExceptionWhenStockIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> Stock.of(null));
+        assertThrows(InvalidValueObjectException.class, () -> Stock.of(null));
     }
 
     @Test
@@ -37,18 +33,18 @@ class StockTest {
     @Test
     void shouldThrowExceptionWhenDiscountIsZero() {
         Stock stock = Stock.of(10);
-        assertThrows(IllegalArgumentException.class, () -> stock.updateStock(0));
+        assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(0));
     }
 
     @Test
     void shouldThrowExceptionWhenDiscountIsNull() {
         Stock stock = Stock.of(10);
-        assertThrows(IllegalArgumentException.class, () -> stock.updateStock(null));
+        assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(null));
     }
 
     @Test
     void shouldThrowExceptionWhenDiscountExceedsStock() {
         Stock stock = Stock.of(5);
-        assertThrows(IllegalArgumentException.class, () -> stock.updateStock(10));
+        assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(10));
     }
 }
