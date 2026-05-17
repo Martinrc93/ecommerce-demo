@@ -19,7 +19,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,8 +48,7 @@ public class BrandController {
 
         CreateBrandCommand command = new CreateBrandCommand(request.name());
         Brand brand = createBrandService.execute(command);
-        BrandDtoResponse response = new BrandDtoResponse(brand.id(),brand.name());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(brandDtoMapper.toResponse(brand));
     }
     
     @Operation(summary = "Obtener una marca por su ID", description = "Retorna los detalles de una marca específica")
@@ -64,8 +62,7 @@ public class BrandController {
     public ResponseEntity<BrandDtoResponse> findById(
             @Parameter(description = "ID de la marca a buscar", example = "1") @PathVariable Long id){
         Brand brand = getBrandService.getById(id);
-        BrandDtoResponse response = new BrandDtoResponse(brand.id(),brand.name());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(brandDtoMapper.toResponse(brand));
     }
 
     @GetMapping("{name}")
@@ -77,8 +74,11 @@ public class BrandController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<Page<BrandDtoResponse>> findAll(@PageableDefault(size = 10,page = 0)
-                                                              Pageable pageable) {
+    public ResponseEntity<Page<BrandDtoResponse>> findAll(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size){
+
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+
         Page<BrandDtoResponse> response = getBrandService.getAll(pageable)
                 .map(brandDtoMapper::toResponse);
 
@@ -97,8 +97,7 @@ public class BrandController {
 
         CreateBrandCommand command = brandDtoMapper.toCommand(request);
         Brand brand = updateBrandService.execute(id,command);
-        BrandDtoResponse response = brandDtoMapper.toResponse(brand);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(brandDtoMapper.toResponse(brand));
     }
 
 }

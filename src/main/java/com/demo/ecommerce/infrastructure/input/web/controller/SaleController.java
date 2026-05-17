@@ -3,12 +3,10 @@ package com.demo.ecommerce.infrastructure.input.web.controller;
 import com.demo.ecommerce.application.port.in.sale.usecase.CreateSaleUseCase;
 import com.demo.ecommerce.application.port.in.sale.usecase.GetSaleUseCase;
 import com.demo.ecommerce.domain.model.sale.Sale;
+import com.demo.ecommerce.infrastructure.input.web.controller.docs.SaleApiDocs;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.request.CreateSaleDtoRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SaleDtoResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.SaleDtoMapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,17 +19,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Tag(name = "Ventas (Sales)", description = "Operaciones relacionadas con la creación y consulta de ventas")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/sales")
-public class SaleController {
+public class SaleController implements SaleApiDocs {
 
     private final CreateSaleUseCase createSaleService;
     private final GetSaleUseCase getSaleService;
     private final SaleDtoMapper mapper;
 
-    @Operation(summary = "Crear una nueva venta", description = "Registra una venta en el sistema descontando el stock de los productos indicados.")
+    @Override
     @PostMapping
     public ResponseEntity<String> create(@RequestBody CreateSaleDtoRequest dto) {
         Sale sale = createSaleService.save(mapper.toCommand(dto));
@@ -39,18 +36,18 @@ public class SaleController {
                 .body("Sale created successfully with ID: " + sale.getId());
     }
     
-    @Operation(summary = "Obtener venta por ID", description = "Recupera los detalles completos de una venta específica mediante su identificador.")
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<SaleDtoResponse> getById(@PathVariable Long id) {
         Sale sale = getSaleService.getById(id);
         return ResponseEntity.ok(mapper.toResponse(sale));
     }
 
-    @Operation(summary = "Buscar ventas por fechas", description = "Devuelve un listado paginado de ventas realizadas dentro de un rango de fechas.")
+    @Override
     @GetMapping
     public ResponseEntity<Page<SaleDtoResponse>> getByDates(
-                                                    @Parameter(description = "YYYY-MM-DD") @RequestParam (required = false) String startDate,
-                                                    @Parameter(description = "YYYY-MM-DD") @RequestParam (required = false) String endDate,
+                                                    @RequestParam (required = false) String startDate,
+                                                    @RequestParam (required = false) String endDate,
                                                     @RequestParam(defaultValue = "0")  int page,
                                                     @RequestParam(defaultValue = "10")  int size){
 

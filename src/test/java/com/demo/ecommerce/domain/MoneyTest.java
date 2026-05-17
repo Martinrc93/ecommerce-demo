@@ -1,5 +1,6 @@
 package com.demo.ecommerce.domain;
 
+import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import com.demo.ecommerce.domain.shared.vo.Discount;
 import com.demo.ecommerce.domain.shared.vo.Money;
 import org.junit.jupiter.api.Test;
@@ -30,15 +31,14 @@ class MoneyTest {
     // Creación inválida
     @Test
     void shouldThrowExceptionWhenMoneyIsNegative() {
-        assertThrows(IllegalArgumentException.class,
-                () -> Money.of(new BigDecimal("-1")));
-    }
+        BigDecimal negativeAmount = new BigDecimal("-1");
 
-    @Test
-    void shouldThrowExceptionWithCorrectMessage() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> Money.of(new BigDecimal("-1")));
-        assertEquals("Money cannot be negative", ex.getMessage());
+        InvalidValueObjectException exception = assertThrows(
+                InvalidValueObjectException.class,
+                () -> Money.of(negativeAmount)
+        );
+
+        assertEquals("Money cannot be negative", exception.getMessage());
     }
 
     // sum()
