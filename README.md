@@ -214,12 +214,6 @@ Variables principales usadas en Render:
 | `RENDER_DATABASE_PASSWORD` | Password de la base. |
 | `JWT_SECRET` | Secreto para firmar tokens JWT. |
 
-## Datos iniciales
-
-El archivo `src/main/resources/data.sql` contiene datos de ejemplo, pero no se ejecuta automaticamente en produccion salvo que se habilite explicitamente la inicializacion SQL de Spring.
-
-Si `/products/all` responde con `content: []`, la API funciona pero la base esta vacia.
-
 ## Estructura del proyecto
 
 ```txt
