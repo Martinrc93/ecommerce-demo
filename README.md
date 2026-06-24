@@ -1,67 +1,165 @@
 # E-commerce API
 
-API RESTful para la gestión de un sistema de comercio electrónico, desarrollada con Spring Boot 3 y Java 21. Incluye gestión de productos, ventas, marcas, categorías y autenticación con JWT.
+API REST para gestionar un ecommerce simple: usuarios, autenticacion, productos, categorias, marcas y ventas.
 
-## Estado del despliegue
+## URLs principales
 
-La API está desplegada en Render:
+| Recurso | URL |
+|---------|-----|
+| API en Render | https://ecommerce-demo-ff8r.onrender.com |
+| Swagger UI | https://ecommerce-demo-ff8r.onrender.com/swagger-ui.html |
+| Verificacion rapida | https://ecommerce-demo-ff8r.onrender.com/products/all |
 
-- URL pública: https://ecommerce-demo-ff8r.onrender.com
-- Endpoint de verificación funcional: https://ecommerce-demo-ff8r.onrender.com/products/all
+La ruta raiz `/` no representa un endpoint funcional de la API. Para probar que el servicio esta vivo, usar `/products/all` o Swagger.
 
-La ruta raíz `/` no expone una página o endpoint de bienvenida. Si se abre la URL base directamente, la aplicación puede devolver un error JSON porque no hay un controlador definido para `/`.
+## Tecnologias usadas
 
-## Requisitos previos
+| Tecnologia | Uso en el proyecto |
+|------------|--------------------|
+| Java 21 | Lenguaje principal |
+| Spring Boot 3.5 | Framework base de la API |
+| Spring Web | Controladores REST |
+| Spring Data JPA | Persistencia y repositorios |
+| Spring Security | Configuracion de seguridad y autenticacion |
+| PostgreSQL | Base de datos principal |
+| H2 | Dependencia disponible para entornos de prueba/desarrollo |
+| JWT (`jjwt`) | Tokens de autenticacion |
+| MapStruct | Mapeo entre DTOs, comandos y modelos |
+| Lombok | Reduccion de codigo repetitivo |
+| Bean Validation | Validacion de requests |
+| Springdoc OpenAPI / Swagger | Documentacion interactiva de endpoints |
+| Docker | Empaquetado para despliegue |
+| Render | Hosting de la API y PostgreSQL |
+| Maven | Gestion de dependencias y build |
 
-- Java 21 o superior
-- Maven 3.8+ o Maven Wrapper incluido en el repositorio
-- PostgreSQL para desarrollo local y producción
-- Docker, solo si se quiere reproducir el despliegue de Render localmente
+## Como usar la API desplegada
 
-## Tecnologías principales
+La forma mas comoda de explorar la API es desde Swagger:
 
-- Spring Boot 3.x
-- Spring Security
-- Spring Data JPA
-- PostgreSQL
-- MapStruct
-- JWT
-- Swagger / OpenAPI 3
+```txt
+https://ecommerce-demo-ff8r.onrender.com/swagger-ui.html
+```
+
+Desde ahi se pueden ver los endpoints, parametros, modelos de request/response y probar llamadas HTTP.
+
+### Verificar que la API responde
+
+```bash
+curl https://ecommerce-demo-ff8r.onrender.com/products/all
+```
+
+Una respuesta como esta significa que la aplicacion esta viva y conectada a la base, aunque todavia no tenga productos cargados:
+
+```json
+{
+  "content": [],
+  "totalElements": 0,
+  "empty": true
+}
+```
+
+## Endpoints principales
+
+### Autenticacion
+
+| Metodo | Endpoint | Uso |
+|--------|----------|-----|
+| `POST` | `/auth/login` | Iniciar sesion. Devuelve tokens en cookies HttpOnly. |
+| `POST` | `/auth/refresh` | Renovar tokens usando un refresh token. |
+| `POST` | `/auth/logout` | Cerrar sesion. |
+
+### Usuarios
+
+| Metodo | Endpoint | Uso |
+|--------|----------|-----|
+| `POST` | `/users/register` | Registrar un usuario. |
+| `GET` | `/users/me` | Consultar el usuario autenticado. |
+
+### Productos
+
+| Metodo | Endpoint | Uso |
+|--------|----------|-----|
+| `POST` | `/products` | Crear un producto. |
+| `GET` | `/products/all` | Listar productos con paginacion y filtros. |
+| `GET` | `/products/{id}` | Obtener un producto por ID. |
+| `PUT` | `/products/{id}` | Actualizar un producto. |
+| `DELETE` | `/products/{id}` | Eliminar un producto. |
+
+Parametros disponibles en `/products/all`:
+
+| Parametro | Descripcion | Default |
+|-----------|-------------|---------|
+| `page` | Pagina a consultar | `0` |
+| `size` | Cantidad de elementos por pagina | `10` |
+| `sortBy` | Campo por el que se ordena | `id` |
+| `sortDirection` | Direccion de ordenamiento (`asc` o `desc`) | `asc` |
+| `category` | Filtro por categoria | opcional |
+| `brand` | Filtro por marca | opcional |
+| `minPrice` | Precio minimo | opcional |
+| `maxPrice` | Precio maximo | opcional |
+| `active` | Filtro por estado activo/inactivo | opcional |
+
+Ejemplo:
+
+```txt
+GET /products/all?page=0&size=10&sortBy=price&sortDirection=desc
+```
+
+### Categorias
+
+| Metodo | Endpoint | Uso |
+|--------|----------|-----|
+| `POST` | `/categories` | Crear una categoria. |
+| `GET` | `/categories/all` | Listar categorias. |
+| `GET` | `/categories/{id}` | Buscar categoria por ID. |
+| `GET` | `/categories/{name}` | Buscar categoria por nombre. |
+| `PUT` | `/categories/{id}` | Actualizar una categoria. |
+| `DELETE` | `/categories/{id}` | Eliminar una categoria. |
+
+### Marcas
+
+| Metodo | Endpoint | Uso |
+|--------|----------|-----|
+| `POST` | `/brands` | Crear una marca. |
+| `GET` | `/brands/all` | Listar marcas. |
+| `GET` | `/brands/{id}` | Buscar marca por ID. |
+| `GET` | `/brands/{name}` | Buscar marca por nombre. |
+| `PUT` | `/brands/{id}` | Actualizar una marca. |
+| `DELETE` | `/brands/{id}` | Eliminar una marca. |
+
+### Ventas
+
+| Metodo | Endpoint | Uso |
+|--------|----------|-----|
+| `POST` | `/sales` | Crear una venta. |
+| `GET` | `/sales` | Consultar ventas con paginacion/filtros. |
+| `GET` | `/sales/{id}` | Obtener una venta por ID. |
+
+## Ejecutar localmente
+
+### Requisitos
+
+- Java 21+
 - Docker
-- Render
+- Maven Wrapper incluido en el proyecto
 
-## Configuración y perfiles
-
-La aplicación usa perfiles de Spring Boot:
-
-| Perfil | Archivo | Uso |
-|--------|---------|-----|
-| `dev` | `src/main/resources/application-dev.properties` | Desarrollo local |
-| `prod` | `src/main/resources/application-prod.properties` | Render / producción |
-
-Por defecto, `src/main/resources/application.properties` activa el perfil `dev`.
-
-## Desarrollo local
-
-El perfil `dev` usa PostgreSQL local en el puerto `5433`, alineado con `docker-compose.yml`.
-
-### 1. Levantar PostgreSQL local
+### 1. Levantar PostgreSQL
 
 ```bash
 docker compose up -d
 ```
 
-La base local queda configurada con:
+Configuracion local definida en `docker-compose.yml` y `application-dev.properties`:
 
-```txt
-Host: localhost
-Port: 5433
-Database: DB_ecommerce
-User: user
-Password: 123456
-```
+| Dato | Valor |
+|------|-------|
+| Host | `localhost` |
+| Puerto | `5433` |
+| Base | `DB_ecommerce` |
+| Usuario | `user` |
+| Password | `123456` |
 
-### 2. Ejecutar la aplicación
+### 2. Iniciar la aplicacion
 
 ```bash
 # Linux/Mac
@@ -71,107 +169,76 @@ Password: 123456
 mvnw.cmd spring-boot:run
 ```
 
-Swagger local está disponible en:
+La API local queda disponible en:
+
+```txt
+http://localhost:8080
+```
+
+Swagger local:
 
 ```txt
 http://localhost:8080/swagger-ui.html
 ```
 
-## Producción en Render
+## Build
 
-El despliegue usa Docker y está definido por:
+```bash
+# Linux/Mac
+./mvnw clean package
 
-- `Dockerfile`
-- `render.yaml`
-- `src/main/resources/application-prod.properties`
-
-### Servicio web
-
-En Render, la aplicación debe correr como **Web Service** con runtime **Docker**.
-
-Render inyecta el puerto mediante la variable `PORT`, y la aplicación lo toma con:
-
-```properties
-server.port=${PORT:10000}
+# Windows
+mvnw.cmd clean package
 ```
 
-### Variables de entorno requeridas
+El `.jar` queda generado en `target/`.
 
-Si se usa `render.yaml` como Blueprint, Render puede crear la base Postgres e inyectar estas variables automáticamente.
+## Despliegue en Render
 
-Si se configura manualmente, cargar estas variables en el Web Service:
+El despliegue esta preparado con Docker:
 
-| Variable | Descripción |
-|----------|-------------|
-| `SPRING_PROFILES_ACTIVE` | Debe ser `prod` |
-| `RENDER_DATABASE_HOST` | Host real de Postgres en Render |
-| `RENDER_DATABASE_PORT` | Puerto de Postgres, normalmente `5432` |
-| `RENDER_DATABASE_NAME` | Nombre real de la base |
-| `RENDER_DATABASE_USER` | Usuario real de la base |
-| `RENDER_DATABASE_PASSWORD` | Password real de la base |
-| `JWT_SECRET` | Secreto para firmar tokens JWT |
+| Archivo | Uso |
+|---------|-----|
+| `Dockerfile` | Construye y ejecuta la aplicacion con Java 21. |
+| `render.yaml` | Define el Web Service y la base PostgreSQL para Render. |
+| `src/main/resources/application-prod.properties` | Configuracion del perfil `prod`. |
 
-Variables opcionales:
+Variables principales usadas en Render:
 
-| Variable | Valor por defecto | Descripción |
-|----------|-------------------|-------------|
-| `JWT_ACCESS_TOKEN_EXPIRATION` | `900000` | Duración del access token en milisegundos |
-| `JWT_REFRESH_TOKEN_EXPIRATION` | `1800000` | Duración del refresh token en milisegundos |
-| `COOKIE_DOMAIN` | vacío | Dominio de cookies si se usa un dominio propio |
+| Variable | Uso |
+|----------|-----|
+| `SPRING_PROFILES_ACTIVE=prod` | Activa configuracion de produccion. |
+| `PORT` | Puerto inyectado por Render. |
+| `RENDER_DATABASE_HOST` | Host de PostgreSQL en Render. |
+| `RENDER_DATABASE_PORT` | Puerto de PostgreSQL. |
+| `RENDER_DATABASE_NAME` | Nombre de la base. |
+| `RENDER_DATABASE_USER` | Usuario de la base. |
+| `RENDER_DATABASE_PASSWORD` | Password de la base. |
+| `JWT_SECRET` | Secreto para firmar tokens JWT. |
 
-No usar placeholders como `<host postgres render>` como valor real. Deben reemplazarse por los datos que Render muestra en la sección de conexión de la base Postgres.
+## Datos iniciales
 
-### Swagger en producción
+El archivo `src/main/resources/data.sql` contiene datos de ejemplo, pero no se ejecuta automaticamente en produccion salvo que se habilite explicitamente la inicializacion SQL de Spring.
 
-Swagger está deshabilitado por defecto en `prod` por seguridad:
-
-```properties
-springdoc.swagger-ui.enabled=false
-springdoc.api-docs.enabled=false
-```
-
-Para habilitarlo temporalmente en Render, agregar estas variables al Web Service:
-
-```env
-SPRINGDOC_SWAGGER_UI_ENABLED=true
-SPRINGDOC_API_DOCS_ENABLED=true
-```
-
-Luego ejecutar un redeploy. La URL será:
-
-```txt
-https://ecommerce-demo-ff8r.onrender.com/swagger-ui.html
-```
-
-Deshabilitarlo nuevamente cuando no sea necesario exponer la documentación pública.
-
-## Endpoints principales
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `POST` | `/auth/login` | Login de usuarios |
-| `POST` | `/auth/refresh` | Renovación de token |
-| `POST` | `/auth/logout` | Logout |
-| `POST` | `/users/register` | Registro de usuarios |
-| `GET` | `/users/me` | Usuario autenticado |
-| `GET` | `/products/all` | Listado paginado de productos |
-| `GET` | `/products/{id}` | Producto por ID |
-| `GET` | `/categories/all` | Listado paginado de categorías |
-| `GET` | `/brands/all` | Listado paginado de marcas |
-| `GET` | `/sales` | Consulta paginada de ventas |
-
-## Notas de operación
-
-- Una respuesta vacía en `/products/all` significa que la aplicación está funcionando, pero la base no tiene productos cargados.
-- El archivo `data.sql` no se ejecuta automáticamente en producción salvo que se configure explícitamente la inicialización SQL de Spring.
-- Actualmente la configuración de seguridad debe revisarse antes de considerar el servicio listo para producción real.
+Si `/products/all` responde con `content: []`, la API funciona pero la base esta vacia.
 
 ## Estructura del proyecto
 
-El proyecto sigue una arquitectura en capas adaptada a principios de arquitectura limpia/hexagonal:
+```txt
+src/main/java/com/demo/ecommerce
+- domain                         # Modelos y reglas de dominio
+- application                    # Casos de uso y puertos
+- infrastructure
+  - input/web                    # Controladores REST, DTOs y mappers
+  - output/persistence           # Persistencia JPA
+  - config                       # Configuracion de la aplicacion
+  - exception                    # Manejo de errores
+  - security                     # JWT, cookies y seguridad
+```
 
-- `domain`: modelos y excepciones de dominio.
-- `application`: casos de uso y puertos.
-- `infrastructure/input/web`: controladores REST y DTOs.
-- `infrastructure/output/persistence`: entidades JPA, repositorios y adaptadores de persistencia.
-- `infrastructure/config`: configuración de seguridad, persistencia y documentación.
+## Notas importantes
+
+- La API no tiene una pagina web frontend; se consume como API REST.
+- La documentacion interactiva esta en Swagger UI.
+- La base de produccion puede estar vacia despues del primer despliegue.
+- Antes de usar esto como produccion real, revisar reglas de seguridad y permisos de endpoints.
