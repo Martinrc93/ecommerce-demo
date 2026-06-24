@@ -1,115 +1,177 @@
 # E-commerce API
 
-API RESTful para la gestión de un sistema de comercio electrónico, desarrollada con Spring Boot 3 y Java 21. Incluye gestión de productos, ventas y autenticación segura con JWT.
+API RESTful para la gestión de un sistema de comercio electrónico, desarrollada con Spring Boot 3 y Java 21. Incluye gestión de productos, ventas, marcas, categorías y autenticación con JWT.
 
-## Requisitos Previos
+## Estado del despliegue
+
+La API está desplegada en Render:
+
+- URL pública: https://ecommerce-demo-ff8r.onrender.com
+- Endpoint de verificación funcional: https://ecommerce-demo-ff8r.onrender.com/products/all
+
+La ruta raíz `/` no expone una página o endpoint de bienvenida. Si se abre la URL base directamente, la aplicación puede devolver un error JSON porque no hay un controlador definido para `/`.
+
+## Requisitos previos
 
 - Java 21 o superior
-- Maven 3.8+
-- Base de datos PostgreSQL (solo para entorno de producción)
-- Entorno de desarrollo compatible (IntelliJ IDEA, VS Code, etc.)
+- Maven 3.8+ o Maven Wrapper incluido en el repositorio
+- PostgreSQL para desarrollo local y producción
+- Docker, solo si se quiere reproducir el despliegue de Render localmente
 
-## Tecnologías Principales
+## Tecnologías principales
 
 - Spring Boot 3.x
-- Spring Security (JWT)
+- Spring Security
 - Spring Data JPA
-- PostgreSQL & H2 Database
-- MapStruct (Mapeo de objetos)
-- Swagger / OpenAPI 3 (Documentación interactiva)
+- PostgreSQL
+- MapStruct
+- JWT
+- Swagger / OpenAPI 3
+- Docker
+- Render
 
-## Configuración y Perfiles
+## Configuración y perfiles
 
-La aplicación está preparada para ejecutarse en diferentes entornos utilizando los perfiles de Spring Boot (`dev` y `prod`). Por defecto, la aplicación se ejecuta en el entorno de desarrollo.
+La aplicación usa perfiles de Spring Boot:
 
-### Entorno de Desarrollo (`dev`)
+| Perfil | Archivo | Uso |
+|--------|---------|-----|
+| `dev` | `src/main/resources/application-dev.properties` | Desarrollo local |
+| `prod` | `src/main/resources/application-prod.properties` | Render / producción |
 
-El perfil de desarrollo está configurado en `src/main/resources/application-dev.properties`.
+Por defecto, `src/main/resources/application.properties` activa el perfil `dev`.
 
-- **Base de Datos:** H2 en memoria (no requiere instalación).
-- **Consola H2:** Habilitada en `/h2-console`.
-- **Swagger:** Habilitado. Disponible en `/swagger-ui.html`.
-- **Logs:** Nivel `DEBUG` para seguimiento de errores.
+## Desarrollo local
 
-### Entorno de Producción (`prod`)
+El perfil `dev` usa PostgreSQL local en el puerto `5433`, alineado con `docker-compose.yml`.
 
-El perfil de producción está configurado en `src/main/resources/application-prod.properties` y requiere configuración de variables de entorno para funcionar de forma segura.
+### 1. Levantar PostgreSQL local
 
-- **Base de Datos:** PostgreSQL.
-- **Swagger:** Deshabilitado por seguridad.
-- **Logs:** Nivel `WARN`.
-
-#### Variables de entorno requeridas para producción:
-
-Para ejecutar la aplicación en producción, debes definir las siguientes variables de entorno:
-
-- `DB_URL`: URL de conexión a la base de datos (ej. `jdbc:postgresql://localhost:5432/miproyecto`)
-- `DB_USERNAME`: Usuario de la base de datos
-- `DB_PASSWORD`: Contraseña de la base de datos
-- `JWT_SECRET`: Clave secreta fuerte para firmar los tokens JWT (mínimo 256 bits/32 caracteres).
-- `COOKIE_DOMAIN`: Dominio de tu aplicación para la configuración segura de cookies (ej. `midominio.com`).
-
-Opcionalmente, puedes configurar:
-- `JWT_ACCESS_EXPIRATION`: Tiempo de expiración del token de acceso en milisegundos (por defecto 15 minutos).
-- `JWT_REFRESH_EXPIRATION`: Tiempo de expiración del token de refresco en milisegundos (por defecto 30 minutos).
-
-## Cómo Ejecutar el Proyecto
-
-### 1. Clonar el repositorio
 ```bash
-git clone <url-del-repositorio>
-cd ecommerce
+docker compose up -d
 ```
 
-### 2. Ejecutar en modo desarrollo
-Por defecto, la aplicación se inicia con el perfil `dev`. Simplemente ejecuta:
+La base local queda configurada con:
+
+```txt
+Host: localhost
+Port: 5433
+Database: DB_ecommerce
+User: user
+Password: 123456
+```
+
+### 2. Ejecutar la aplicación
 
 ```bash
-# Con Maven Wrapper (Linux/Mac)
+# Linux/Mac
 ./mvnw spring-boot:run
 
-# Con Maven Wrapper (Windows)
+# Windows
 mvnw.cmd spring-boot:run
 ```
 
-O también puedes compilar y ejecutar el `.jar` directamente:
+Swagger local está disponible en:
 
-```bash
-mvn clean package
-java -jar target/ecommerce-0.0.1-SNAPSHOT.jar
+```txt
+http://localhost:8080/swagger-ui.html
 ```
 
-Una vez iniciada, podrás acceder a la documentación interactiva (Swagger UI) en:
-[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+## Producción en Render
 
-### 3. Ejecutar en modo producción
+El despliegue usa Docker y está definido por:
 
-Primero, debes compilar la aplicación asegurándote de definir las variables de entorno previamente:
+- `Dockerfile`
+- `render.yaml`
+- `src/main/resources/application-prod.properties`
 
-```bash
-# Ejemplo definiendo variables localmente en terminal
-export DB_URL=jdbc:postgresql://localhost:5432/prod_db
-export DB_USERNAME=tu_usuario
-export DB_PASSWORD=tu_password
-export JWT_SECRET=tu_secreto_muy_largo_y_seguro_para_jwt
-export COOKIE_DOMAIN=tudominio.com
+### Servicio web
 
-# Iniciar la aplicación con el perfil 'prod'
-java -jar target/ecommerce-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+En Render, la aplicación debe correr como **Web Service** con runtime **Docker**.
+
+Render inyecta el puerto mediante la variable `PORT`, y la aplicación lo toma con:
+
+```properties
+server.port=${PORT:10000}
 ```
 
-## Estructura del Proyecto
+### Variables de entorno requeridas
 
-El proyecto sigue una arquitectura en capas adaptada a los principios de arquitectura limpia/hexagonal:
+Si se usa `render.yaml` como Blueprint, Render puede crear la base Postgres e inyectar estas variables automáticamente.
 
-- `infrastructure/input/web`: Controladores REST y DTOs (Request/Response).
-- `application`: Casos de uso y lógica de negocio principal.
-- `domain`: Modelos de negocio.
-- `infrastructure/output/persistence`: Entidades JPA, repositorios y adaptadores de base de datos.
-- `infrastructure/config`: Configuraciones generales de la aplicación (Seguridad, Swagger, etc.).
+Si se configura manualmente, cargar estas variables en el Web Service:
 
-## Endpoints Principales
+| Variable | Descripción |
+|----------|-------------|
+| `SPRING_PROFILES_ACTIVE` | Debe ser `prod` |
+| `RENDER_DATABASE_HOST` | Host real de Postgres en Render |
+| `RENDER_DATABASE_PORT` | Puerto de Postgres, normalmente `5432` |
+| `RENDER_DATABASE_NAME` | Nombre real de la base |
+| `RENDER_DATABASE_USER` | Usuario real de la base |
+| `RENDER_DATABASE_PASSWORD` | Password real de la base |
+| `JWT_SECRET` | Secreto para firmar tokens JWT |
 
-- `/api/auth/login`: Autenticación de usuarios.
-- `/api/products`: Gestión de productos (CRUD).
-- `/api/sales`: Registro y consulta de ventas.
+Variables opcionales:
+
+| Variable | Valor por defecto | Descripción |
+|----------|-------------------|-------------|
+| `JWT_ACCESS_TOKEN_EXPIRATION` | `900000` | Duración del access token en milisegundos |
+| `JWT_REFRESH_TOKEN_EXPIRATION` | `1800000` | Duración del refresh token en milisegundos |
+| `COOKIE_DOMAIN` | vacío | Dominio de cookies si se usa un dominio propio |
+
+No usar placeholders como `<host postgres render>` como valor real. Deben reemplazarse por los datos que Render muestra en la sección de conexión de la base Postgres.
+
+### Swagger en producción
+
+Swagger está deshabilitado por defecto en `prod` por seguridad:
+
+```properties
+springdoc.swagger-ui.enabled=false
+springdoc.api-docs.enabled=false
+```
+
+Para habilitarlo temporalmente en Render, agregar estas variables al Web Service:
+
+```env
+SPRINGDOC_SWAGGER_UI_ENABLED=true
+SPRINGDOC_API_DOCS_ENABLED=true
+```
+
+Luego ejecutar un redeploy. La URL será:
+
+```txt
+https://ecommerce-demo-ff8r.onrender.com/swagger-ui.html
+```
+
+Deshabilitarlo nuevamente cuando no sea necesario exponer la documentación pública.
+
+## Endpoints principales
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/auth/login` | Login de usuarios |
+| `POST` | `/auth/refresh` | Renovación de token |
+| `POST` | `/auth/logout` | Logout |
+| `POST` | `/users/register` | Registro de usuarios |
+| `GET` | `/users/me` | Usuario autenticado |
+| `GET` | `/products/all` | Listado paginado de productos |
+| `GET` | `/products/{id}` | Producto por ID |
+| `GET` | `/categories/all` | Listado paginado de categorías |
+| `GET` | `/brands/all` | Listado paginado de marcas |
+| `GET` | `/sales` | Consulta paginada de ventas |
+
+## Notas de operación
+
+- Una respuesta vacía en `/products/all` significa que la aplicación está funcionando, pero la base no tiene productos cargados.
+- El archivo `data.sql` no se ejecuta automáticamente en producción salvo que se configure explícitamente la inicialización SQL de Spring.
+- Actualmente la configuración de seguridad debe revisarse antes de considerar el servicio listo para producción real.
+
+## Estructura del proyecto
+
+El proyecto sigue una arquitectura en capas adaptada a principios de arquitectura limpia/hexagonal:
+
+- `domain`: modelos y excepciones de dominio.
+- `application`: casos de uso y puertos.
+- `infrastructure/input/web`: controladores REST y DTOs.
+- `infrastructure/output/persistence`: entidades JPA, repositorios y adaptadores de persistencia.
+- `infrastructure/config`: configuración de seguridad, persistencia y documentación.
