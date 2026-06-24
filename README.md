@@ -6,11 +6,9 @@ API REST para gestionar un ecommerce simple: usuarios, autenticacion, productos,
 
 | Recurso | URL |
 |---------|-----|
-| API en Render | https://ecommerce-demo-ff8r.onrender.com |
 | Swagger UI | https://ecommerce-demo-ff8r.onrender.com/swagger-ui.html |
-| Verificacion rapida | https://ecommerce-demo-ff8r.onrender.com/products/all |
 
-La ruta raiz `/` no representa un endpoint funcional de la API. Para probar que el servicio esta vivo, usar `/products/all` o Swagger.
+Usar Swagger como punto de entrada para explorar y probar la API.
 
 ## Tecnologias usadas
 
@@ -240,5 +238,3 @@ src/main/java/com/demo/ecommerce
 
 - La API no tiene una pagina web frontend; se consume como API REST.
 - La documentacion interactiva esta en Swagger UI.
-- La base de produccion puede estar vacia despues del primer despliegue.
-- Antes de usar esto como produccion real, revisar reglas de seguridad y permisos de endpoints.
