@@ -4,6 +4,7 @@ import com.demo.ecommerce.domain.exception.auth.InvalidCredentialException;
 import com.demo.ecommerce.domain.exception.auth.InvalidTokenException;
 import com.demo.ecommerce.domain.exception.category.CategoryNotFoundException;
 import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
+import com.demo.ecommerce.domain.exception.global.NotFoundException;
 import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import com.demo.ecommerce.domain.exception.product.ProductNameNotFoundException;
 import com.demo.ecommerce.domain.exception.sale.SaleNotFoundException;
@@ -119,7 +120,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidSort(InvalidDataAccessApiUsageException ex, HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.BAD_REQUEST,
                 "Invalid sort parameter",
                 request.getRequestURI());
 
@@ -128,6 +129,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCategoryNotFound(CategoryNotFoundException ex, HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(NotFoundException ex, HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND,

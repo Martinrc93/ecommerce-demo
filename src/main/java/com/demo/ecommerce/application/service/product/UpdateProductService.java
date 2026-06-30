@@ -6,6 +6,9 @@ import com.demo.ecommerce.application.port.in.product.usecase.UpdateProductUseCa
 import com.demo.ecommerce.application.port.out.BrandRepositoryPort;
 import com.demo.ecommerce.application.port.out.CategoryRepositoryPort;
 import com.demo.ecommerce.application.port.out.ProductRepositoryPort;
+import com.demo.ecommerce.domain.exception.category.CategoryNotFoundException;
+import com.demo.ecommerce.domain.exception.global.NotFoundException;
+import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import com.demo.ecommerce.domain.model.product.Brand;
 import com.demo.ecommerce.domain.model.product.Category;
 import com.demo.ecommerce.domain.model.product.Product;
@@ -30,13 +33,13 @@ public class UpdateProductService implements UpdateProductUseCase {
     public Product update(Long id, UpdateProductCommand command) {
 
         Product productExisting = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found" + id)); //TODO
+                .orElseThrow(() -> new ProductIdNotFoundException(id)); //TODO
 
         Brand brand = brandRepository.findByName(command.brand())
-                .orElseThrow(() -> new IllegalArgumentException("La marca ingresada no existe"));
+                .orElseThrow(() -> new NotFoundException("Brand not found: " + command.brand()));
 
         Category category = categoryRepository.findByName(command.category())
-                .orElseThrow(() -> new IllegalArgumentException("La categoría ingresada no existe"));
+                .orElseThrow(() -> new CategoryNotFoundException(command.category()));
 
         productExisting.update(
                 command.name(),

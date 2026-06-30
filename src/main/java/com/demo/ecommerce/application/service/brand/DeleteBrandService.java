@@ -2,6 +2,7 @@ package com.demo.ecommerce.application.service.brand;
 
 import com.demo.ecommerce.application.port.in.brand.usecase.DeleteBrandUseCase;
 import com.demo.ecommerce.application.port.out.BrandRepositoryPort;
+import com.demo.ecommerce.domain.exception.global.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class DeleteBrandService implements DeleteBrandUseCase {
     public void execute(Long id) {
 
         brandRepositoryPort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Brand not found")); //TODO
+                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + id)); //TODO
         brandRepositoryPort.deleteById(id);
     }
 }

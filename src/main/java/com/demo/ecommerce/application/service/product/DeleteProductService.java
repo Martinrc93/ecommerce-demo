@@ -2,6 +2,7 @@ package com.demo.ecommerce.application.service.product;
 
 import com.demo.ecommerce.application.port.in.product.usecase.DeleteProductUseCase;
 import com.demo.ecommerce.application.port.out.ProductRepositoryPort;
+import com.demo.ecommerce.domain.exception.product.ProductIdNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class DeleteProductService implements DeleteProductUseCase {
     public void execute(Long id) {
 
         productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found" + id));
+                .orElseThrow(() -> new ProductIdNotFoundException(id));
 
         productRepository.deleteById(id);
     }

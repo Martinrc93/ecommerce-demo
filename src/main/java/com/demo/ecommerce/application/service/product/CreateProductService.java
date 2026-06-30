@@ -5,6 +5,8 @@ import com.demo.ecommerce.application.port.in.product.usecase.CreateProductUseCa
 import com.demo.ecommerce.application.port.out.BrandRepositoryPort;
 import com.demo.ecommerce.application.port.out.CategoryRepositoryPort;
 import com.demo.ecommerce.application.port.out.ProductRepositoryPort;
+import com.demo.ecommerce.domain.exception.category.CategoryNotFoundException;
+import com.demo.ecommerce.domain.exception.global.NotFoundException;
 import com.demo.ecommerce.domain.model.product.Brand;
 import com.demo.ecommerce.domain.model.product.Category;
 import com.demo.ecommerce.domain.model.product.Product;
@@ -23,10 +25,10 @@ public class  CreateProductService implements CreateProductUseCase {
     public Product execute(CreateProductCommand command) {
 
         Brand brand = brandRepository.findByName(command.brand())
-                .orElseThrow(() -> new IllegalArgumentException("La marca ingresada no existe"));
+                .orElseThrow(() -> new NotFoundException("Brand not found: " + command.brand()));
 
         Category category = categoryRepository.findByName(command.category())
-                .orElseThrow(() -> new IllegalArgumentException("La categoría ingresada no existe"));
+                .orElseThrow(() -> new CategoryNotFoundException(command.category()));
 
         Product product = Product.create(
                 command.name(),

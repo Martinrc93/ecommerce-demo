@@ -2,6 +2,7 @@ package com.demo.ecommerce.application.service.category;
 
 import com.demo.ecommerce.application.port.in.category.usecase.GetCategoryUseCase;
 import com.demo.ecommerce.application.port.out.CategoryRepositoryPort;
+import com.demo.ecommerce.domain.exception.category.CategoryNotFoundException;
 import com.demo.ecommerce.domain.model.product.Category;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,13 +18,13 @@ public class GetCategoryService implements GetCategoryUseCase {
     @Override
     public Category getById(Long id) {
         return categoryRepositoryPort.findById(id)
-                .orElseThrow(()-> new RuntimeException("Category not found"));//TODO
+                .orElseThrow(()-> new CategoryNotFoundException("id: " + id));//TODO
     }
 
     @Override
     public Category getByName(String name) {
         return categoryRepositoryPort.findByName(name)
-                .orElseThrow(()-> new RuntimeException("Category not found"));//TODO
+                .orElseThrow(()-> new CategoryNotFoundException(name));//TODO
     }
 
     @Override
