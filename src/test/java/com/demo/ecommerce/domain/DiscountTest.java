@@ -3,9 +3,10 @@ package com.demo.ecommerce.domain;
 import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import com.demo.ecommerce.domain.shared.vo.Discount;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class DiscountTest {
 
@@ -31,25 +32,33 @@ class DiscountTest {
         assertDoesNotThrow(() -> Discount.of(new BigDecimal("99.99")));
     }
 
-    // Casos inválidos
+    @Test
+    void shouldCreateDiscountWithHundredPercent() {
+        Discount discount = Discount.of(new BigDecimal("100"));
+        assertEquals(new BigDecimal("1.00"), discount.discount());
+    }
+
     @Test
     void shouldThrowExceptionWhenDiscountIsNegative() {
         BigDecimal negativeDiscount = new BigDecimal("-10");
 
-        assertThrows(InvalidValueObjectException.class,
-                () -> Discount.of(negativeDiscount));
+        InvalidValueObjectException exception = assertThrows(
+                InvalidValueObjectException.class,
+                () -> Discount.of(negativeDiscount)
+        );
+
+        assertEquals("Discount must be between 0 and 100", exception.getMessage());
     }
 
     @Test
     void shouldThrowExceptionWhenDiscountIsGreaterThan100() {
         BigDecimal excessiveDiscount = new BigDecimal("101");
 
-        assertThrows(InvalidValueObjectException.class,
-                () -> Discount.of(excessiveDiscount));
-    }
+        InvalidValueObjectException exception = assertThrows(
+                InvalidValueObjectException.class,
+                () -> Discount.of(excessiveDiscount)
+        );
 
-    @Test
-    void shouldCreateDiscountViaStaticFactory() {
-        assertDoesNotThrow(() -> Discount.of(new BigDecimal("25")));
+        assertEquals("Discount must be between 0 and 100", exception.getMessage());
     }
 }

@@ -3,6 +3,7 @@ package com.demo.ecommerce.domain;
 import com.demo.ecommerce.domain.exception.global.InvalidValueObjectException;
 import com.demo.ecommerce.domain.model.product.Stock;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StockTest {
@@ -15,12 +16,14 @@ class StockTest {
 
     @Test
     void shouldThrowExceptionWhenStockIsNegative() {
-        assertThrows(InvalidValueObjectException.class, () -> Stock.of(-5));
+        InvalidValueObjectException exception = assertThrows(InvalidValueObjectException.class, () -> Stock.of(-5));
+        assertEquals("Amount must be greater than or equal to 0", exception.getMessage());
     }
 
     @Test
     void shouldThrowExceptionWhenStockIsNull() {
-        assertThrows(InvalidValueObjectException.class, () -> Stock.of(null));
+        InvalidValueObjectException exception = assertThrows(InvalidValueObjectException.class, () -> Stock.of(null));
+        assertEquals("Amount must be greater than or equal to 0", exception.getMessage());
     }
 
     @Test
@@ -31,20 +34,29 @@ class StockTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenDiscountIsZero() {
+    void shouldThrowExceptionWhenStockDiscountIsZero() {
         Stock stock = Stock.of(10);
-        assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(0));
+
+        InvalidValueObjectException exception = assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(0));
+
+        assertEquals("Stock to discount must be greater than 0", exception.getMessage());
     }
 
     @Test
-    void shouldThrowExceptionWhenDiscountIsNull() {
+    void shouldThrowExceptionWhenStockDiscountIsNull() {
         Stock stock = Stock.of(10);
-        assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(null));
+
+        InvalidValueObjectException exception = assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(null));
+
+        assertEquals("Stock to discount must be greater than 0", exception.getMessage());
     }
 
     @Test
     void shouldThrowExceptionWhenDiscountExceedsStock() {
         Stock stock = Stock.of(5);
-        assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(10));
+
+        InvalidValueObjectException exception = assertThrows(InvalidValueObjectException.class, () -> stock.updateStock(10));
+
+        assertEquals("Insufficient stock available", exception.getMessage());
     }
 }
