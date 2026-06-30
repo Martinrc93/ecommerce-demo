@@ -39,3 +39,6 @@ src/main/resources/application-secret.properties
 
 # Mac
 .DS_Store
+
+# Markdown
+*.md
