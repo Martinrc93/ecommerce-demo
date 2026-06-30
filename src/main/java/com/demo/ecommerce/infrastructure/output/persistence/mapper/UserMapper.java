@@ -12,13 +12,14 @@ public interface UserMapper {
     @Mapping(source = "userName.lastName", target = "lastName")
     @Mapping(source = "password.password" , target ="password")
     @Mapping(source = "email.email" , target ="email")
+    @Mapping(source = "role" , target ="rol")
     UserEntity toEntity (User user);
 
     @Mapping(source = "name", target = "userName.name")
     @Mapping(source = "lastName", target = "userName.lastName")
     @Mapping(source = "password", target = "password.password")
     @Mapping(source = "email", target = "email.email")
-    //@Mapping(target = "rol",ignore = true)
+    @Mapping(source = "rol", target = "role")
     User  toDomain (UserEntity userEntity);
 
 

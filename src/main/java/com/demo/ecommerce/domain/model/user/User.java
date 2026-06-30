@@ -18,23 +18,25 @@ public class User {
 
     private HashedPassword password;
 
-    //private Rols rol;
+    private Rols role;
 
     public static User create (String name,String lastName,String email,String password){
         User user = new User();
         user.userName = new UserName(name,lastName);
         user.email = Email.of(email);
         user.password = HashedPassword.of(password);
+        user.role = Rols.BUYER;
         return user;
     }
 
     @Builder
-    public static User reconstitute (UUID id,UserName userName,Email email,HashedPassword password){
+    public static User reconstitute (UUID id,UserName userName,Email email,HashedPassword password,Rols role){
         User user = new User();
         user.id = id;
         user.userName = userName;
         user.email = email;
         user.password = password;
+        user.role = role != null ? role : Rols.BUYER;
         return user;
     }
 

@@ -17,6 +17,7 @@ import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
@@ -38,7 +39,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
-                //.claim("roles", user.getRol()) //TODO TOQUE EL GET ROL
+                .claim("roles", List.of("ROLE_" + user.getRole().name()))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(getSigningKey())
@@ -61,7 +62,8 @@ public class JwtTokenProvider {
     }
 
     public List<String> extractRoles(String token) {
-        return parseClaims(token).get("roles", List.class);
+        return Optional.ofNullable(parseClaims(token).get("roles", List.class))
+                .orElse(List.of());
     }
 
     public Duration getRefreshTokenDuration() {

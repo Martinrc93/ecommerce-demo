@@ -1,48 +1,63 @@
 package com.demo.ecommerce.infrastructure.security;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            throw new UsernameNotFoundException(username);
+        };
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/auth/**",
+                                "/users/register",
+                                "/error"
                         ).permitAll()
-                        .anyRequest().permitAll()
-                );
-        return http.build();
-    }
-    /*
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // Desactivado para APIs REST
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/users/register", "/products/**", "/error", "/sales/**","/v3/api-docs/**",
-                                "/v3/api-docs.yaml",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html").permitAll() // 
-                        .anyRequest().authenticated()             //
-                        //.anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**", "/brands/**", "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/sales/**").hasAnyRole("BUYER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/products/**", "/brands/**", "/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/**", "/brands/**", "/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**", "/brands/**", "/categories/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults()); // Autenticación básica para pruebas
-
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-     */
 }
