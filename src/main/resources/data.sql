@@ -2,63 +2,94 @@ TRUNCATE TABLE products CASCADE;
 TRUNCATE TABLE brands CASCADE;
 TRUNCATE TABLE categories CASCADE;
 
--- IMPORTANTE: Para que este archivo se ejecute automáticamente, spring.sql.init.mode=always debe estar configurado en application.properties
+-- Medium development seed for the ecommerce catalog.
+-- This seed is intended for the dev profile and resets catalog data on startup.
 
 -- ==============================================
--- 1. Inserción de Categorías (categories)
+-- Categories
 -- ==============================================
 INSERT INTO categories (id, name, created_at, created_by, updated_at, last_modified_by) VALUES
-(1, 'Calzado Deportivo', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(2, 'Ropa de Entrenamiento', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(3, 'Accesorios', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(4, 'Electrónica Deportiva', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(5, 'Suplementos', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init')
+(1, 'Running', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(2, 'Training', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(3, 'Lifestyle', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(4, 'Outdoor', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(5, 'Football', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(6, 'Accessories', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(7, 'Electronics', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(8, 'Nutrition', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed')
 ON CONFLICT (id) DO NOTHING;
 
-
-
 -- ==============================================
--- 2. Inserción de Marcas (brands)
+-- Brands
 -- ==============================================
 INSERT INTO brands (id, name, created_at, created_by, updated_at, last_modified_by) VALUES
-(1, 'Nike', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(2, 'Adidas', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(3, 'Puma', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(4, 'Under Armour', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(5, 'Reebok', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(6, 'Garmin', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(7, 'Optimum Nutrition', CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init')
+(1, 'Nike', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(2, 'Adidas', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(3, 'Puma', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(4, 'Under Armour', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(5, 'Reebok', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(6, 'Garmin', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(7, 'Asics', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(8, 'New Balance', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(9, 'Salomon', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(10, 'Wilson', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(11, 'Optimum Nutrition', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(12, 'Hydro Flask', CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed')
 ON CONFLICT (id) DO NOTHING;
 
 -- ==============================================
--- 3. Inserción de Productos (products)
+-- Products
 -- ==============================================
--- (active, brand_id, category_id, created_at, created_by, description, last_modified_by, name, price, stock, updated_at, version)
-
 INSERT INTO products (id, name, description, brand_id, category_id, price, stock, active, version, created_at, created_by, updated_at, last_modified_by) VALUES
--- Calzado (Categoría 1)
-(1, 'Air Max 270', 'Zapatillas de running con cámara de aire visible para máxima amortiguación.', 1, 1, 150.00, 50, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(2, 'Ultraboost 22', 'Zapatillas running con tecnología de retorno de energía líder en la industria.', 2, 1, 180.00, 30, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(3, 'Suede Classic', 'El diseño clásico que definió la era del calzado urbano.', 3, 1, 85.00, 120, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
+(1, 'Air Zoom Pegasus 41', 'Neutral running shoes for daily road training.', 1, 1, 139.99, 45, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(2, 'Ultraboost Light', 'Responsive running shoes with cushioned support.', 2, 1, 189.99, 32, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(3, 'Gel Nimbus 26', 'Premium cushioned running shoes for long distance.', 7, 1, 159.99, 28, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(4, 'Fresh Foam 1080', 'Soft daily trainer with a breathable knit upper.', 8, 1, 164.99, 34, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(5, 'Velocity Nitro 3', 'Lightweight running shoes for speed sessions.', 3, 1, 119.99, 22, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
 
--- Ropa (Categoría 2)
-(4, 'Dri-FIT T-Shirt', 'Camiseta de entrenamiento transpirable que absorbe el sudor.', 1, 2, 35.00, 200, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(5, 'Tiro 21 Track Pants', 'Pantalones de entrenamiento ajustados para fútbol y gimnasio.', 2, 2, 50.00, 150, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(6, 'Project Rock Shorts', 'Pantalones cortos de entrenamiento resistentes, probados por Dwayne Johnson.', 4, 2, 60.00, 80, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
+(6, 'Metcon 9', 'Stable training shoes for lifting and gym workouts.', 1, 2, 149.99, 26, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(7, 'Dropset Trainer 2', 'Training shoes built for strength sessions.', 2, 2, 129.99, 30, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(8, 'Project Rock 6', 'Durable training shoes for high intensity workouts.', 4, 2, 159.99, 18, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(9, 'Nano X4', 'Versatile shoes for cross training and cardio.', 5, 2, 139.99, 25, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(10, 'Training Shorts', 'Lightweight shorts with quick dry fabric.', 4, 2, 44.99, 80, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
 
--- Accesorios (Categoría 3)
-(7, 'Duffel Bag Medium', 'Bolsa de deporte espaciosa con compartimento para zapatillas.', 1, 3, 45.00, 60, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(8, 'Training Gloves', 'Guantes de levantamiento de pesas con agarre reforzado.', 5, 3, 25.00, 100, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(9, 'Water Bottle 1L', 'Botella de agua libre de BPA con indicador de medida.', 4, 3, 15.00, 300, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
+(11, 'Air Force 1 Low', 'Classic lifestyle sneakers with leather upper.', 1, 3, 119.99, 40, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(12, 'Samba OG', 'Iconic terrace sneakers for everyday outfits.', 2, 3, 109.99, 36, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(13, 'Suede Classic XXI', 'Retro lifestyle sneakers with suede finish.', 3, 3, 84.99, 50, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(14, 'Club C 85', 'Minimal court inspired lifestyle sneakers.', 5, 3, 79.99, 44, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(15, 'Essentials Hoodie', 'Soft fleece hoodie for casual daily wear.', 2, 3, 64.99, 65, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
 
--- Electrónica (Categoría 4)
-(10, 'Forerunner 245', 'Reloj inteligente con GPS diseñado específicamente para corredores.', 6, 4, 300.00, 20, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(11, 'Vivosmart 5', 'Pulsera de actividad inteligente con monitor de energía corporal.', 6, 4, 150.00, 40, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
+(16, 'Speedcross 6', 'Trail running shoes with aggressive grip.', 9, 4, 144.99, 24, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(17, 'XA Pro 3D', 'Outdoor shoes for hiking and technical trails.', 9, 4, 154.99, 21, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(18, 'Trail Jacket', 'Water resistant jacket for outdoor training.', 8, 4, 129.99, 19, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(19, 'Hiking Backpack 25L', 'Compact backpack with multiple storage pockets.', 9, 4, 89.99, 27, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(20, 'Thermal Base Layer', 'Warm base layer for cold weather activities.', 4, 4, 54.99, 38, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
 
--- Suplementos (Categoría 5)
-(12, 'Gold Standard Whey 2lbs', 'Proteína de suero de leche en polvo, sabor chocolate doble.', 7, 5, 35.99, 100, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init'),
-(13, 'Amino Energy', 'Suplemento de aminoácidos con cafeína de fuentes naturales.', 7, 5, 22.50, 85, true, 0, CURRENT_TIMESTAMP, 'system_init', CURRENT_TIMESTAMP, 'system_init')
+(21, 'Mercurial Vapor 16', 'Firm ground football boots for fast players.', 1, 5, 249.99, 16, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(22, 'Predator Elite', 'Football boots focused on control and accuracy.', 2, 5, 259.99, 12, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(23, 'Future Ultimate', 'Flexible football boots for agile movement.', 3, 5, 219.99, 14, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(24, 'Match Football', 'Durable football for training sessions.', 10, 5, 34.99, 70, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(25, 'Shin Guards Pro', 'Lightweight guards with secure ankle support.', 2, 5, 24.99, 90, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+
+(26, 'Duffle Bag 40L', 'Spacious gym bag with ventilated shoe pocket.', 1, 6, 54.99, 42, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(27, 'Training Gloves', 'Padded gloves for weightlifting and grip support.', 5, 6, 22.99, 95, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(28, 'Stainless Bottle 32oz', 'Insulated bottle for cold drinks during training.', 12, 6, 39.99, 88, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(29, 'Performance Socks 3 Pack', 'Breathable socks for training and running.', 8, 6, 17.99, 120, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(30, 'Yoga Mat 6mm', 'Cushioned mat for yoga, mobility and stretching.', 4, 6, 29.99, 60, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+
+(31, 'Forerunner 265', 'GPS running watch with AMOLED display.', 6, 7, 449.99, 15, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(32, 'Venu 3', 'Smartwatch with health tracking and sport modes.', 6, 7, 399.99, 17, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(33, 'Heart Rate Monitor', 'Chest strap sensor for accurate heart rate data.', 6, 7, 89.99, 31, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(34, 'Wireless Earbuds Sport', 'Sweat resistant earbuds for workouts.', 4, 7, 99.99, 36, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(35, 'Bike Speed Sensor', 'Compact cycling sensor for speed tracking.', 6, 7, 39.99, 29, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+
+(36, 'Gold Standard Whey 2lb', 'Whey protein powder with chocolate flavor.', 11, 8, 39.99, 55, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(37, 'Amino Energy', 'Amino acid supplement with natural caffeine.', 11, 8, 24.99, 48, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(38, 'Creatine Monohydrate', 'Creatine powder for strength and performance.', 11, 8, 19.99, 62, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(39, 'Protein Bar Box', 'Box of protein bars for recovery and snacks.', 11, 8, 29.99, 40, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed'),
+(40, 'Electrolyte Tablets', 'Hydration tablets for endurance training.', 11, 8, 14.99, 75, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed')
 ON CONFLICT (id) DO NOTHING;
 
--- Para PostgreSQL, actualizamos la secuencia del ID
--- SELECT setval('products_id_seq', (SELECT MAX(id) FROM products));
+SELECT setval(pg_get_serial_sequence('categories', 'id'), (SELECT MAX(id) FROM categories));
+SELECT setval(pg_get_serial_sequence('brands', 'id'), (SELECT MAX(id) FROM brands));
+SELECT setval(pg_get_serial_sequence('products', 'id'), (SELECT MAX(id) FROM products));
