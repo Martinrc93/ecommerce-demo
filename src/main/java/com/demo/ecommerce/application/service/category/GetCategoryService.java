@@ -18,13 +18,13 @@ public class GetCategoryService implements GetCategoryUseCase {
     @Override
     public Category getById(Long id) {
         return categoryRepositoryPort.findById(id)
-                .orElseThrow(()-> new CategoryNotFoundException("id: " + id));//TODO
+                .orElseThrow(() -> new CategoryNotFoundException("id: " + id));
     }
 
     @Override
     public Category getByName(String name) {
         return categoryRepositoryPort.findByName(name)
-                .orElseThrow(()-> new CategoryNotFoundException(name));//TODO
+                .orElseThrow(() -> new CategoryNotFoundException(name));
     }
 
     @Override

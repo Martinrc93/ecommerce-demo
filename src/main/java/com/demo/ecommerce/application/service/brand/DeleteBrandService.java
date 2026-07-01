@@ -16,7 +16,7 @@ public class DeleteBrandService implements DeleteBrandUseCase {
     public void execute(Long id) {
 
         brandRepositoryPort.findById(id)
-                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + id)); //TODO
+                .orElseThrow(() -> new NotFoundException("Brand not found with id: " + id));
         brandRepositoryPort.deleteById(id);
     }
 }

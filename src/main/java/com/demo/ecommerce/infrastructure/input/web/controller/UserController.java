@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 
-@Tag(name = "Usuarios (Users)", description = "Endpoints para la gestión de cuentas de usuario y perfiles")
+@Tag(name = "Users", description = "Endpoints for user account and profile management")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
@@ -28,7 +28,7 @@ public class UserController {
     private final UserRegisterUseCase userRegisterService;
     private final GetUserUseCase getUserService;
 
-    @Operation(summary = "Registrar un nuevo usuario", description = "Crea una nueva cuenta en el sistema y devuelve los tokens de sesión iniciales.")
+    @Operation(summary = "Register a new user", description = "Creates a new account and returns the initial session tokens.")
     @PostMapping("/register")
     public ResponseEntity<RegisterResult> register(@RequestBody RegisterCommand request) {
         RegisterResult registerResult = userRegisterService.register(request);
@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok().body(registerResult);
     }
 
-    @Operation(summary = "Obtener perfil del usuario", description = "Devuelve la información del usuario actualmente autenticado (requiere token Bearer).")
+    @Operation(summary = "Get user profile", description = "Returns the currently authenticated user information (requires a Bearer token).")
     @GetMapping("/me")
     public ResponseEntity<UserDtoResponse> userByToken(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails){
         UUID userId = UUID.fromString(userDetails.getUsername());

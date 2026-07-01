@@ -18,13 +18,13 @@ public class GetBrandService implements GetBrandUseCase {
     @Override
     public Brand getById(Long id) {
         return brandRepositoryPort.findById(id).
-                orElseThrow(() -> new NotFoundException("Brand not found with id: " + id)); //TODO
+                orElseThrow(() -> new NotFoundException("Brand not found with id: " + id));
     }
 
     @Override
     public Brand getByName(String name) {
         return brandRepositoryPort.findByName(name).
-                orElseThrow(() -> new NotFoundException("Brand not found with name: " + name)); //TODO
+                orElseThrow(() -> new NotFoundException("Brand not found with name: " + name));
     }
 
     @Override

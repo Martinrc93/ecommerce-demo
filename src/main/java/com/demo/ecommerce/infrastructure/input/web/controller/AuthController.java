@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Tag(name = "Autenticación (Auth)", description = "Endpoints para el inicio y cierre de sesión, y renovación de tokens")
+@Tag(name = "Authentication", description = "Endpoints for login, logout, and token refresh operations")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/auth")
@@ -31,7 +31,7 @@ public class AuthController {
     private final AuthDtoMapper authMapper;
     private final CookieTokenService cookieTokenService;
 
-    @Operation(summary = "Iniciar sesión", description = "Valida las credenciales del usuario y devuelve tokens de sesión en cookies HttpOnly.")
+    @Operation(summary = "Log in", description = "Validates user credentials and returns session tokens in HttpOnly cookies.")
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest request) {
 
@@ -48,7 +48,7 @@ public class AuthController {
                 .build();
     }
 
-    @Operation(summary = "Renovar token de acceso", description = "Genera nuevos tokens a partir de un refreshToken válido y los actualiza en las cookies.")
+    @Operation(summary = "Refresh access token", description = "Generates new tokens from a valid refresh token and updates the cookies.")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@RequestBody @Valid RefreshRequest refreshToken)
     {
@@ -63,7 +63,7 @@ public class AuthController {
                 .body(tokens);
     }
 
-    @Operation(summary = "Cerrar sesión", description = "Invalida el refreshToken actual para finalizar la sesión del usuario de forma segura.")
+    @Operation(summary = "Log out", description = "Invalidates the current refresh token to safely end the user session.")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody @Valid RefreshRequest refreshToken) {
         authService.logout(authMapper.toCommand(refreshToken));

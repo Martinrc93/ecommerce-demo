@@ -33,7 +33,7 @@ public class UpdateProductService implements UpdateProductUseCase {
     public Product update(Long id, UpdateProductCommand command) {
 
         Product productExisting = productRepository.findById(id)
-                .orElseThrow(() -> new ProductIdNotFoundException(id)); //TODO
+                .orElseThrow(() -> new ProductIdNotFoundException(id));
 
         Brand brand = brandRepository.findByName(command.brand())
                 .orElseThrow(() -> new NotFoundException("Brand not found: " + command.brand()));

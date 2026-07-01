@@ -2,13 +2,13 @@ package com.demo.ecommerce.infrastructure.input.web.dto.sale.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Detalles del producto a incluir en la venta")
+@Schema(description = "Product details to include in the sale")
 public record SaleItemsDtoRequest(
         
-        @Schema(description = "ID del producto", example = "1")
+        @Schema(description = "Product ID", example = "1")
         Long productId,
         
-        @Schema(description = "Cantidad de unidades a comprar", example = "2")
+        @Schema(description = "Quantity of units to purchase", example = "2")
         Integer quantity) {
 
 }

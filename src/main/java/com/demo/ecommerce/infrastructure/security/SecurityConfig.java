@@ -48,7 +48,9 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/auth/**",
                                 "/users/register",
-                                "/error"
+                                "/error",
+                                "/actuator/health",
+                                "/actuator/health/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/**", "/brands/**", "/categories/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/sales/**").hasAnyRole("BUYER", "ADMIN")

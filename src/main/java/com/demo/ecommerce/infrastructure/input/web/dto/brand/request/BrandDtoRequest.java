@@ -2,9 +2,9 @@ package com.demo.ecommerce.infrastructure.input.web.dto.brand.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Datos para crear o actualizar una marca")
+@Schema(description = "Data used to create or update a brand")
 public record BrandDtoRequest(
-        @Schema(description = "Nombre de la marca", example = "Nike")
+        @Schema(description = "Brand name", example = "Nike")
         String name
 ) {
 }

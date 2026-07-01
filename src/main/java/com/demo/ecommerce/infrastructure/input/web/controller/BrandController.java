@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/brands")
-@Tag(name = "Brands", description = "API para la gestión de marcas")
+@Tag(name = "Brands", description = "API for brand management")
 public class BrandController {
 
     private final CreateBrandUseCase createBrandService;
@@ -34,33 +34,33 @@ public class BrandController {
     private final DeleteBrandUseCase deleteBrandService;
     private final BrandDtoMapper brandDtoMapper;
 
-    @Operation(summary = "Crear una nueva marca", description = "Crea una nueva marca a partir de los datos proporcionados")
+    @Operation(summary = "Create a new brand", description = "Creates a new brand from the provided data")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Marca creada exitosamente",
+            @ApiResponse(responseCode = "200", description = "Brand created successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = BrandDtoResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = @Content),
-            @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
     })
     @PostMapping
     public ResponseEntity<BrandDtoResponse> save(
-            @Parameter(description = "Datos requeridos para crear la marca") @RequestBody BrandDtoRequest request ){
+            @Parameter(description = "Data required to create the brand") @RequestBody BrandDtoRequest request ){
 
         CreateBrandCommand command = new CreateBrandCommand(request.name());
         Brand brand = createBrandService.execute(command);
         return ResponseEntity.ok(brandDtoMapper.toResponse(brand));
     }
     
-    @Operation(summary = "Obtener una marca por su ID", description = "Retorna los detalles de una marca específica")
+    @Operation(summary = "Get a brand by ID", description = "Returns the details of a specific brand")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Marca encontrada",
+            @ApiResponse(responseCode = "200", description = "Brand found",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = BrandDtoResponse.class)) }),
-            @ApiResponse(responseCode = "404", description = "Marca no encontrada", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Brand not found", content = @Content)
     })
     @GetMapping("{id}")
     public ResponseEntity<BrandDtoResponse> findById(
-            @Parameter(description = "ID de la marca a buscar", example = "1") @PathVariable Long id){
+            @Parameter(description = "Brand ID to search for", example = "1") @PathVariable Long id){
         Brand brand = getBrandService.getById(id);
         return ResponseEntity.ok(brandDtoMapper.toResponse(brand));
     }

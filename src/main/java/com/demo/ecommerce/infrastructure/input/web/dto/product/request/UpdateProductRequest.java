@@ -4,28 +4,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
-@Schema(description = "Datos para actualizar parcialmente un producto")
+@Schema(description = "Data used to partially update a product")
 public record UpdateProductRequest(
 
-        @Schema(description = "Nombre comercial del producto", example = "Zapatillas Running")
+        @Schema(description = "Product display name", example = "Running Shoes")
         String name,
 
-        @Schema(description = "Descripción detallada del producto", example = "Zapatillas ligeras con suela antideslizante")
+        @Schema(description = "Detailed product description", example = "Lightweight running shoes with a non-slip sole")
         String description,
 
-        @Schema(description = "Marca del producto", example = "Nike")
+        @Schema(description = "Product brand", example = "Nike")
         String brand,
 
-        @Schema(description = "Categoría principal del producto", example = "Calzado Deportivo")
+        @Schema(description = "Primary product category", example = "Sports Footwear")
         String category,
 
-        @Schema(description = "Cantidad de inventario disponible", example = "100")
+        @Schema(description = "Available inventory quantity", example = "100")
         Integer stock,
 
-        @Schema(description = "Precio unitario del producto", example = "129.99")
+        @Schema(description = "Unit product price", example = "129.99")
         BigDecimal price,
 
-        @Schema(description = "Indica si el producto está visible y disponible para compra", example = "true")
+        @Schema(description = "Indicates whether the product is visible and available for purchase", example = "true")
         boolean active
 
 ) {
