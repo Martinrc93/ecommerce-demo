@@ -20,10 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-<<<<<<< HEAD
-=======
-@Tag(name = "Authentication", description = "Endpoints for login, logout, and token refresh operations")
->>>>>>> origin/master
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping(ApiPaths.AUTH)
@@ -34,11 +30,7 @@ public class AuthController implements AuthApiDocs {
     private final AuthDtoMapper authMapper;
     private final CookieTokenService cookieTokenService;
 
-<<<<<<< HEAD
     @Override
-=======
-    @Operation(summary = "Log in", description = "Validates user credentials and returns session tokens in HttpOnly cookies.")
->>>>>>> origin/master
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest request) {
 
@@ -55,11 +47,7 @@ public class AuthController implements AuthApiDocs {
                 .build();
     }
 
-<<<<<<< HEAD
     @Override
-=======
-    @Operation(summary = "Refresh access token", description = "Generates new tokens from a valid refresh token and updates the cookies.")
->>>>>>> origin/master
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@RequestBody @Valid RefreshRequest refreshToken)
     {
@@ -74,11 +62,7 @@ public class AuthController implements AuthApiDocs {
                 .body(tokens);
     }
 
-<<<<<<< HEAD
     @Override
-=======
-    @Operation(summary = "Log out", description = "Invalidates the current refresh token to safely end the user session.")
->>>>>>> origin/master
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody @Valid RefreshRequest refreshToken) {
         authService.logout(authMapper.toCommand(refreshToken));

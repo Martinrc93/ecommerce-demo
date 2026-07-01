@@ -22,12 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(ApiPaths.CATEGORIES)
 @AllArgsConstructor
-<<<<<<< HEAD
 public class CategoryController implements CategoryApiDocs {
-=======
-@Tag(name = "Categories", description = "API for category management")
-public class CategoryController {
->>>>>>> origin/master
 
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryUseCase getCategoryUseCase;
@@ -70,7 +65,7 @@ public class CategoryController {
     }
 
     @Override
-    @GetMapping("/{name}")
+    @GetMapping("/by-name/{name}")
     public ResponseEntity<CategoryDtoResponse> findByName(@PathVariable String name){
         CategoryDtoResponse response = categoryDtoMapper.toResponse(getCategoryUseCase.getByName(name));
         return ResponseEntity.ok(response);

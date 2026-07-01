@@ -47,13 +47,8 @@ public class SecurityConfig {
                                 "/v3/api-docs.yaml",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-<<<<<<< HEAD
                                 ApiPaths.AUTH + "/**",
                                 ApiPaths.USERS + "/register",
-=======
-                                "/auth/**",
-                                "/users/register",
->>>>>>> origin/master
                                 "/error",
                                 "/actuator/health",
                                 "/actuator/health/**"
