@@ -18,60 +18,60 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 
-@Tag(name = "Productos (Products)", description = "Operaciones CRUD para la gestión del catálogo de productos")
+@Tag(name = "Products", description = "CRUD operations for product catalog management")
 public interface ProductApiDocs {
 
-    @Operation(summary = "Crear un nuevo producto", description = "Añade un nuevo producto al catálogo con la información proporcionada.")
+    @Operation(summary = "Create a new product", description = "Adds a new product to the catalog using the provided information.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Producto creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = @Content),
-            @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+            @ApiResponse(responseCode = "201", description = "Product created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
     })
     ResponseEntity<Void> save(
-            @Parameter(description = "Datos requeridos para crear el producto") @RequestBody CreateProductRequest request);
+            @Parameter(description = "Data required to create the product") @RequestBody CreateProductRequest request);
 
-    @Operation(summary = "Buscar producto por ID", description = "Devuelve los detalles de un producto específico dado su ID.")
+    @Operation(summary = "Find product by ID", description = "Returns the details of a specific product by ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Producto encontrado",
+            @ApiResponse(responseCode = "200", description = "Product found",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GeneralProductResponse.class)) }),
-            @ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
     ResponseEntity<GeneralProductResponse> findById(
-            @Parameter(description = "ID del producto a buscar", example = "1") @PathVariable Long id);
+            @Parameter(description = "Product ID to search for", example = "1") @PathVariable Long id);
 
-    @Operation(summary = "Listar todos los productos", description = "Devuelve un listado paginado con todos los productos registrados en el sistema filtrando opcionalmente por categoría, marca, precio y estado.")
+    @Operation(summary = "List all products", description = "Returns a paginated list of all registered products, optionally filtered by category, brand, price, and status.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de productos devuelta exitosamente")
+            @ApiResponse(responseCode = "200", description = "Product list returned successfully")
     })
     ResponseEntity<Page<GeneralProductResponse>> findAll(
-            @Parameter(description = "Número de página (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Tamaño de la página", example = "10") @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "Campo por el cual ordenar", example = "id") @RequestParam(defaultValue = "id") String sortBy,
-            @Parameter(description = "Dirección de ordenamiento (asc/desc)", example = "asc") @RequestParam(defaultValue = "asc") String sortDirection,
-            @Parameter(description = "Filtro por nombre de categoría") @RequestParam(required = false) String category,
-            @Parameter(description = "Filtro por nombre de marca") @RequestParam(required = false) String brand,
-            @Parameter(description = "Filtro por precio mínimo", example = "10.0") @RequestParam(required = false) BigDecimal minPrice,
-            @Parameter(description = "Filtro por precio máximo", example = "100.0") @RequestParam(required = false) BigDecimal maxPrice,
-            @Parameter(description = "Filtro por estado activo (true/false)") @RequestParam(required = false) Boolean active);
+            @Parameter(description = "Page number (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size", example = "10") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Field used for sorting", example = "id") @RequestParam(defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction (asc/desc)", example = "asc") @RequestParam(defaultValue = "asc") String sortDirection,
+            @Parameter(description = "Filter by category name") @RequestParam(required = false) String category,
+            @Parameter(description = "Filter by brand name") @RequestParam(required = false) String brand,
+            @Parameter(description = "Minimum price filter", example = "10.0") @RequestParam(required = false) BigDecimal minPrice,
+            @Parameter(description = "Maximum price filter", example = "100.0") @RequestParam(required = false) BigDecimal maxPrice,
+            @Parameter(description = "Filter by active status (true/false)") @RequestParam(required = false) Boolean active);
 
-    @Operation(summary = "Actualizar un producto", description = "Sobrescribe la información de un producto existente mediante su ID.")
+    @Operation(summary = "Update a product", description = "Overwrites an existing product using its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Producto actualizado exitosamente",
+            @ApiResponse(responseCode = "200", description = "Product updated successfully",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GeneralProductResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
     ResponseEntity<GeneralProductResponse> update(
-            @Parameter(description = "ID del producto a actualizar", example = "1") @PathVariable Long id,
-            @Parameter(description = "Datos para actualizar el producto") @RequestBody UpdateProductRequest request);
+            @Parameter(description = "Product ID to update", example = "1") @PathVariable Long id,
+            @Parameter(description = "Data used to update the product") @RequestBody UpdateProductRequest request);
 
-    @Operation(summary = "Eliminar un producto", description = "Elimina un producto del catálogo de manera permanente usando su ID.")
+    @Operation(summary = "Delete a product", description = "Permanently deletes a product from the catalog using its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Producto eliminado exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content)
+            @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
     ResponseEntity<Void> delete(
-            @Parameter(description = "ID del producto a eliminar", example = "1") @PathVariable Long id);
+            @Parameter(description = "Product ID to delete", example = "1") @PathVariable Long id);
 }

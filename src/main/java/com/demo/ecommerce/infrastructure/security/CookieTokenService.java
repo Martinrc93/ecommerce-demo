@@ -1,5 +1,6 @@
 package com.demo.ecommerce.infrastructure.security;
 
+import com.demo.ecommerce.infrastructure.config.ApiPaths;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class CookieTokenService {
         return ResponseCookie.from("refreshToken", token)
                 .httpOnly(true)
                 .secure(secureCookie)
-                .path("/api/auth/refresh")
+                .path(ApiPaths.AUTH_REFRESH)
                 .maxAge(REFRESH_TOKEN_EXPIRY)
                 .sameSite("Strict")
                 .domain(cookieDomain)
@@ -47,7 +48,7 @@ public class CookieTokenService {
     public ResponseCookie clearRefreshTokenCookie() {
         return ResponseCookie.from("refreshToken", "")
                 .httpOnly(true).secure(secureCookie)
-                .path("/api/auth/refresh").maxAge(0).build();
+                .path(ApiPaths.AUTH_REFRESH).maxAge(0).build();
     }
 
 }

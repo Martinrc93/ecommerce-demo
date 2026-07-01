@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-@Schema(description = "Respuesta que contiene una lista de productos")
+@Schema(description = "Response containing a product list")
 public record ListProductsResponse(
-        @Schema(description = "Lista de productos")
+        @Schema(description = "Product list")
         List<ProductResponse> products
 ) {
 }

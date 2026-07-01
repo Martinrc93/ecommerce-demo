@@ -4,27 +4,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
-@Schema(description = "Datos del producto")
+@Schema(description = "Product data")
 public record ProductResponse(
-        @Schema(description = "Identificador único del producto", example = "1")
+        @Schema(description = "Unique product identifier", example = "1")
         Long id,
 
-        @Schema(description = "Nombre comercial del producto", example = "Zapatillas Running")
+        @Schema(description = "Product display name", example = "Running Shoes")
         String name,
 
-        @Schema(description = "Descripción detallada del producto", example = "Zapatillas ligeras con suela antideslizante")
+        @Schema(description = "Detailed product description", example = "Lightweight running shoes with a non-slip sole")
         String description,
 
-        @Schema(description = "Categoría principal del producto", example = "Calzado Deportivo")
+        @Schema(description = "Primary product category", example = "Sports Footwear")
         String category,
 
-        @Schema(description = "Cantidad del producto", example = "2")
+        @Schema(description = "Product quantity", example = "2")
         Integer quantity,
 
-        @Schema(description = "Precio unitario del producto", example = "129.99")
+        @Schema(description = "Unit product price", example = "129.99")
         BigDecimal price,
 
-        @Schema(description = "Precio total (cantidad * precio unitario)", example = "259.98")
+        @Schema(description = "Total price (quantity * unit price)", example = "259.98")
         BigDecimal total
 ) {
 }

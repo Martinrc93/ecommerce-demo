@@ -1,5 +1,6 @@
 package com.demo.ecommerce.infrastructure.security;
 
+import com.demo.ecommerce.infrastructure.config.ApiPaths;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,15 +47,17 @@ public class SecurityConfig {
                                 "/v3/api-docs.yaml",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/auth/**",
-                                "/users/register",
-                                "/error"
+                                ApiPaths.AUTH + "/**",
+                                ApiPaths.USERS + "/register",
+                                "/error",
+                                "/actuator/health",
+                                "/actuator/health/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products/**", "/brands/**", "/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/sales/**").hasAnyRole("BUYER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/products/**", "/brands/**", "/categories/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/products/**", "/brands/**", "/categories/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/products/**", "/brands/**", "/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, ApiPaths.SALES + "/**").hasAnyRole("BUYER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

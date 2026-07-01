@@ -20,7 +20,7 @@ public interface ProductMapper {
     @Mapping(source = "productAvailability.stock.stock", target = "stock")
     @Mapping(source = "productAvailability.active", target = "active")
     @Mapping(source = "version", target = "version")
-    ProductEntity toEntity(Product product); //TODO separar map de brand y category
+    ProductEntity toEntity(Product product);
 
 
 

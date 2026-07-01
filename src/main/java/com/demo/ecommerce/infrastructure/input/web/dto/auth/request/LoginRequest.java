@@ -6,14 +6,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-@Schema(description = "Datos requeridos para iniciar sesión")
+@Schema(description = "Data required to log in")
 public record LoginRequest(
 
-        @Schema(description = "Correo electrónico del usuario registrado", example = "usuario@example.com")
+        @Schema(description = "Registered user email address", example = "user@example.com")
         @Email(message = "Invalid email format")
         String email,
 
-        @Schema(description = "Contraseña segura del usuario", example = "PasswordSegura123!")
+        @Schema(description = "Secure user password", example = "StrongPassword123!")
         @NotBlank(message = "Password is required")
         @Size(min = 8, message = "Password must be at least 8 characters long")
         @Pattern(

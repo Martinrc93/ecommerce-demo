@@ -6,22 +6,22 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-@Schema(description = "Respuesta detallada de una venta")
+@Schema(description = "Detailed sale response")
 public record SaleDtoResponse(
 
-        @Schema(description = "ID autogenerado de la venta", example = "1")
+        @Schema(description = "Auto-generated sale ID", example = "1")
         Long id,
 
-        @Schema(description = "Identificador del usuario que realizó la compra", example = "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
+        @Schema(description = "Identifier of the user who made the purchase", example = "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
         UUID userId,
 
-        @Schema(description = "Lista de productos comprados")
+        @Schema(description = "List of purchased products")
         List<ItemsResponse> items,
 
-        @Schema(description = "Subtotal de la venta sin aplicar descuentos", example = "299.99")
+        @Schema(description = "Sale subtotal before discounts", example = "299.99")
         BigDecimal subTotal,
 
-        @Schema(description = "Descuento total aplicado a la venta", example = "10.00")
+        @Schema(description = "Total discount applied to the sale", example = "10.00")
         BigDecimal discount,
 
         @Schema(description = "Monto final a pagar", example = "269.99")

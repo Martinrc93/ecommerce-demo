@@ -7,6 +7,7 @@ import com.demo.ecommerce.application.port.in.product.usecase.DeleteProductUseCa
 import com.demo.ecommerce.application.port.in.product.usecase.GetProductUseCase;
 import com.demo.ecommerce.application.port.in.product.usecase.UpdateProductUseCase;
 import com.demo.ecommerce.domain.model.product.Product;
+import com.demo.ecommerce.infrastructure.config.ApiPaths;
 import com.demo.ecommerce.infrastructure.input.web.controller.docs.ProductApiDocs;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.CreateProductRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.product.request.UpdateProductRequest;
@@ -26,7 +27,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping(ApiPaths.PRODUCTS)
 @AllArgsConstructor
 public class ProductController implements ProductApiDocs {
 
@@ -64,15 +65,15 @@ public class ProductController implements ProductApiDocs {
     @Override
     @GetMapping("/all")
     public ResponseEntity<Page<GeneralProductResponse>> findAll(
-                                                                @RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "10") int size,
-                                                                @RequestParam(defaultValue = "id") String sortBy,
-                                                                @RequestParam(defaultValue = "asc") String sortDirection,
-                                                                @RequestParam(required = false) String category,
-                                                                @RequestParam(required = false) String brand,
-                                                                @RequestParam(required = false) BigDecimal minPrice,
-                                                                @RequestParam(required = false) BigDecimal maxPrice,
-                                                                @RequestParam(required = false) Boolean active) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Boolean active) {
 
         Sort sort = sortDirection.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();

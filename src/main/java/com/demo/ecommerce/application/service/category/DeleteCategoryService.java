@@ -15,7 +15,7 @@ public class DeleteCategoryService implements DeleteCategoryUseCase {
     @Override
     public void execute(Long id) {
         categoryRepositoryPort.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("id: " + id)); //TODO
+                .orElseThrow(() -> new CategoryNotFoundException("id: " + id));
         categoryRepositoryPort.deleteById(id);
     }
 }
