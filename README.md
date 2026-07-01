@@ -1,52 +1,54 @@
-# E-commerce API
+[English](README.en.md) | [Español](README.md)
 
-REST API for a simple e-commerce backend: authentication, users, products, categories, brands, and sales. There is no frontend; Swagger UI is the main entry point for exploring the API.
+# API de comercio electrónico
 
-## Quick path
+API REST para un backend simple de comercio electrónico: autenticación, usuarios, productos, categorías, marcas y ventas. No hay frontend; Swagger UI es el punto de entrada principal para explorar la API.
 
-1. Start PostgreSQL locally: `docker compose up -d`
-2. Run the application:
+## Ruta rápida
+
+1. Inicia PostgreSQL en local: `docker compose up -d`
+2. Ejecuta la aplicación:
    - macOS/Linux: `./mvnw spring-boot:run`
    - Windows: `mvnw.cmd spring-boot:run`
-3. Open Swagger UI: `http://localhost:8080/swagger-ui.html`
-4. Verify the app is healthy: `curl http://localhost:8080/actuator/health`
+3. Abre Swagger UI: `http://localhost:8080/swagger-ui.html`
+4. Verifica que la app esté saludable: `curl http://localhost:8080/actuator/health`
 
-## What the project provides
+## Qué ofrece el proyecto
 
-| Area | Purpose |
-|------|---------|
-| Authentication | Login, token refresh, and logout using JWT cookies |
-| Users | Register a user and fetch the authenticated profile |
-| Products | Create, list, update, and delete products |
-| Categories | CRUD and paginated listing |
-| Brands | CRUD and paginated listing |
-| Sales | Create sales and query sales by date range |
+| Área | Propósito |
+|------|-----------|
+| Autenticación | Inicio de sesión, renovación de token y cierre de sesión con cookies JWT |
+| Usuarios | Registro de usuarios y consulta del perfil autenticado |
+| Productos | Crear, listar, actualizar y eliminar productos |
+| Categorías | CRUD y listado paginado |
+| Marcas | CRUD y listado paginado |
+| Ventas | Crear ventas y consultar ventas por rango de fechas |
 
-## Prerequisites
+## Requisitos previos
 
-| Requirement | Notes |
-|-------------|-------|
-| Java 21 | Required by the Spring Boot build |
-| Docker | Used for PostgreSQL locally and for containerized runs |
-| Maven Wrapper | Included in the repo; no separate Maven install is needed |
+| Requisito | Notas |
+|-----------|-------|
+| Java 21 | Requerido por la compilación de Spring Boot |
+| Docker | Se usa para PostgreSQL en local y para ejecuciones en contenedor |
+| Maven Wrapper | Incluido en el repositorio; no hace falta instalar Maven por separado |
 
-## Local setup
+## Configuración local
 
-The default profile is `dev` (`src/main/resources/application.properties`), so local runs expect PostgreSQL on `localhost:5433` with these values:
+El perfil predeterminado es `dev` (`src/main/resources/application.properties`), por lo que las ejecuciones locales esperan PostgreSQL en `localhost:5433` con estos valores:
 
-| Setting | Value |
-|---------|-------|
-| Database | `DB_ecommerce` |
-| Username | `user` |
-| Password | `123456` |
+| Configuración | Valor |
+|--------------|-------|
+| Base de datos | `DB_ecommerce` |
+| Usuario | `user` |
+| Contraseña | `123456` |
 
-### 1) Start the database
+### 1) Iniciar la base de datos
 
 ```bash
 docker compose up -d
 ```
 
-### 2) Start the API
+### 2) Iniciar la API
 
 ```bash
 # macOS/Linux
@@ -56,9 +58,9 @@ docker compose up -d
 mvnw.cmd spring-boot:run
 ```
 
-The API is available at `http://localhost:8080`.
+La API está disponible en `http://localhost:8080`.
 
-### 3) Optional build step
+### 3) Paso opcional de compilación
 
 ```bash
 # macOS/Linux
@@ -68,19 +70,19 @@ The API is available at `http://localhost:8080`.
 mvnw.cmd clean package
 ```
 
-The packaged JAR is written to `target/`.
+El JAR generado se escribe en `target/`.
 
-## Alternative run modes
+## Modos alternativos de ejecución
 
-### Full Docker Compose stack
+### Stack completo con Docker Compose
 
-`docker compose up -d` also defines the app service, so it can run the database and API together from the `Dockerfile`.
+`docker compose up -d` también define el servicio de la app, por lo que puede ejecutar la base de datos y la API juntas desde el `Dockerfile`.
 
-### Render deployment
+### Despliegue en Render
 
-The repo includes `render.yaml` and `Dockerfile` for deploying to Render with the `prod` profile.
+El repositorio incluye `render.yaml` y `Dockerfile` para desplegar en Render con el perfil `prod`.
 
-Required production inputs are defined in `src/main/resources/application-prod.properties` and `render.yaml`, including:
+Las entradas de producción requeridas están definidas en `src/main/resources/application-prod.properties` y `render.yaml`, e incluyen:
 
 - `SPRING_PROFILES_ACTIVE=prod`
 - `RENDER_DATABASE_HOST`
@@ -90,25 +92,25 @@ Required production inputs are defined in `src/main/resources/application-prod.p
 - `RENDER_DATABASE_PASSWORD`
 - `JWT_SECRET`
 
-## Expected result and verification
+## Resultado esperado y verificación
 
-After startup:
+Después del inicio:
 
-- Swagger UI should load at `http://localhost:8080/swagger-ui.html`
-- Health check should return `UP` at `http://localhost:8080/actuator/health`
-- `GET /api/v1/products/all` should return a paginated JSON response (empty content is valid if no products exist)
+- Swagger UI debería cargar en `http://localhost:8080/swagger-ui.html`
+- La verificación de salud debería devolver `UP` en `http://localhost:8080/actuator/health`
+- `GET /api/v1/products/all` debería devolver una respuesta JSON paginada (un contenido vacío es válido si no existen productos)
 
-## Troubleshooting
+## Resolución de problemas
 
-| Symptom | Likely cause / fix |
-|---------|--------------------|
-| App cannot connect to PostgreSQL | Start the database first and confirm port `5433` is free |
-| Login cookies do not persist locally | Local config sets `app.security.cookie.secure=false`, so test over HTTP on `localhost` |
-| Swagger does not appear in production | Swagger is disabled in `application-prod.properties` |
-| Render deployment fails on startup | Check `JWT_SECRET` and the Render database env vars |
+| Síntoma | Causa probable / solución |
+|---------|---------------------------|
+| La aplicación no puede conectarse a PostgreSQL | Inicia primero la base de datos y confirma que el puerto `5433` esté libre |
+| Las cookies de inicio de sesión no persisten en local | La configuración local define `app.security.cookie.secure=false`, así que prueba sobre HTTP en `localhost` |
+| Swagger no aparece en producción | Swagger está deshabilitado en `application-prod.properties` |
+| El despliegue en Render falla al arrancar | Revisa `JWT_SECRET` y las variables de entorno de la base de datos en Render |
 
-## Notes
+## Notas
 
-- The API uses UTC as the default JVM time zone.
-- Local persistence is configured through JPA with `ddl-auto=update`.
-- Actuator exposure is limited to the health endpoint.
+- La API usa UTC como zona horaria JVM predeterminada.
+- La persistencia local está configurada mediante JPA con `ddl-auto=update`.
+- La exposición de Actuator está limitada al endpoint de salud.
