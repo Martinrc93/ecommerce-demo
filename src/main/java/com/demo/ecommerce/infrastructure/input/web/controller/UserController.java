@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+<<<<<<< HEAD
+=======
+
+@Tag(name = "Users", description = "Endpoints for user account and profile management")
+>>>>>>> origin/master
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(ApiPaths.USERS)
@@ -25,7 +30,11 @@ public class UserController implements UserApiDocs {
     private final UserRegisterUseCase userRegisterService;
     private final GetUserUseCase getUserService;
 
+<<<<<<< HEAD
     @Override
+=======
+    @Operation(summary = "Register a new user", description = "Creates a new account and returns the initial session tokens.")
+>>>>>>> origin/master
     @PostMapping("/register")
     public ResponseEntity<RegisterResult> register(@RequestBody RegisterCommand request) {
         RegisterResult registerResult = userRegisterService.register(request);
@@ -33,7 +42,11 @@ public class UserController implements UserApiDocs {
         return ResponseEntity.ok().body(registerResult);
     }
 
+<<<<<<< HEAD
     @Override
+=======
+    @Operation(summary = "Get user profile", description = "Returns the currently authenticated user information (requires a Bearer token).")
+>>>>>>> origin/master
     @GetMapping("/me")
     public ResponseEntity<UserDtoResponse> userByToken(@AuthenticationPrincipal UserDetails userDetails){
         UUID userId = UUID.fromString(userDetails.getUsername());

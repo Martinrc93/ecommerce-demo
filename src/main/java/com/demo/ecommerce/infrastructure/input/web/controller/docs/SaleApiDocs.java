@@ -50,7 +50,11 @@ public interface SaleApiDocs {
             @Parameter(description = "Start date for the search (format: YYYY-MM-DD)", example = "2023-10-01") @RequestParam(required = false) String startDate,
             @Parameter(description = "End date for the search (format: YYYY-MM-DD)", example = "2023-10-31") @RequestParam(required = false) String endDate,
             @Parameter(description = "Page number to retrieve (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
+<<<<<<< HEAD
             @Parameter(description = "Number of records per page", example = "10") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Field used for sorting", example = "date") @RequestParam(defaultValue = "date") String sortBy,
             @Parameter(description = "Sort direction (asc/desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDirection);
+=======
+            @Parameter(description = "Number of records per page", example = "10") @RequestParam(defaultValue = "10") int size);
+>>>>>>> origin/master
 }
