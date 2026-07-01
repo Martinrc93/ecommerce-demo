@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Security and Environments ###
-# Excluir configuraciones de producción o archivos que puedan contener secretos locales
+# Excluir configuraciones de producciï¿½n o archivos que puedan contener secretos locales
 src/main/resources/application-secret.properties
 *.env
 
@@ -42,3 +42,4 @@ src/main/resources/application-secret.properties
 
 # Markdown
 *.md
+.atl/.skill-registry.cache.json
