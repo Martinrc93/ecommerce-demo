@@ -2,11 +2,13 @@ package com.demo.ecommerce.infrastructure.input.web.controller;
 
 import com.demo.ecommerce.application.port.in.sale.usecase.CreateSaleUseCase;
 import com.demo.ecommerce.application.port.in.sale.usecase.GetSaleUseCase;
+import com.demo.ecommerce.application.service.sale.SaleSeedService;
 import com.demo.ecommerce.domain.model.sale.Sale;
 import com.demo.ecommerce.infrastructure.config.ApiPaths;
 import com.demo.ecommerce.infrastructure.input.web.controller.docs.SaleApiDocs;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.request.CreateSaleDtoRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SaleDtoResponse;
+import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SeedSalesResponse;
 import com.demo.ecommerce.infrastructure.input.web.mapper.SaleDtoMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ public class SaleController implements SaleApiDocs {
 
     private final CreateSaleUseCase createSaleService;
     private final GetSaleUseCase getSaleService;
+    private final SaleSeedService saleSeedService;
     private final SaleDtoMapper mapper;
 
     @Override
@@ -74,5 +77,11 @@ public class SaleController implements SaleApiDocs {
 
         Page<SaleDtoResponse> response = sales.map(mapper::toResponse);
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PostMapping("/seed")
+    public ResponseEntity<SeedSalesResponse> seedSales(@RequestParam(defaultValue = "120") Integer amount) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(saleSeedService.seed(amount));
     }
 }

@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 "/actuator/health/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, ApiPaths.SALES + "/seed").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, ApiPaths.SALES + "/**").hasAnyRole("BUYER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")

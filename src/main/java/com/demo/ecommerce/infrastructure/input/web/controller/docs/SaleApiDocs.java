@@ -2,6 +2,7 @@ package com.demo.ecommerce.infrastructure.input.web.controller.docs;
 
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.request.CreateSaleDtoRequest;
 import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SaleDtoResponse;
+import com.demo.ecommerce.infrastructure.input.web.dto.sale.response.SeedSalesResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,4 +54,19 @@ public interface SaleApiDocs {
             @Parameter(description = "Number of records per page", example = "10") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Field used for sorting", example = "date") @RequestParam(defaultValue = "date") String sortBy,
             @Parameter(description = "Sort direction (asc/desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDirection);
+
+    @Operation(
+            summary = "Generate ecommerce seed data",
+            description = "Resets and recreates categories, brands, products, users and sales. Sale dates are distributed between the execution time and the previous 7 days."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Sales seed created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SeedSalesResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid amount requested", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)
+    })
+    ResponseEntity<SeedSalesResponse> seedSales(
+            @Parameter(description = "Number of sales to generate", example = "120")
+            @RequestParam(defaultValue = "120") Integer amount);
 }
