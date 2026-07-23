@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,8 +52,8 @@ public class SaleController implements SaleApiDocs {
     @Override
     @GetMapping
     public ResponseEntity<Page<SaleDtoResponse>> getByDates(
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "date") String sortBy,
@@ -69,11 +70,11 @@ public class SaleController implements SaleApiDocs {
             sDate = LocalDate.now().atStartOfDay();
             eDate = LocalDate.now().atTime(LocalTime.MAX);
         } else {
-            sDate = LocalDate.parse(startDate).atStartOfDay();
-            eDate = LocalDate.parse(endDate).atTime(LocalTime.MAX);
+            sDate = startDate.atStartOfDay();
+            eDate = endDate.atTime(LocalTime.MAX);
         }
 
-        Page<Sale> sales = getSaleService.getByDates(sDate,eDate,pageable);
+        Page<Sale> sales = getSaleService.getByDates(sDate, eDate, pageable);
 
         Page<SaleDtoResponse> response = sales.map(mapper::toResponse);
         return ResponseEntity.ok(response);
@@ -81,7 +82,7 @@ public class SaleController implements SaleApiDocs {
 
     @Override
     @PostMapping("/seed")
-    public ResponseEntity<SeedSalesResponse> seedSales(@RequestParam(defaultValue = "120") Integer amount) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(saleSeedService.seed(amount));
+    public ResponseEntity<SeedSalesResponse> seedSales() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(saleSeedService.seed());
     }
 }

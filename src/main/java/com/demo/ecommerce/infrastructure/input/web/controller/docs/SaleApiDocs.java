@@ -11,10 +11,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDate;
 
 @Tag(name = "Sales", description = "Operations related to creating and querying sales")
 public interface SaleApiDocs {
@@ -41,32 +44,32 @@ public interface SaleApiDocs {
     ResponseEntity<SaleDtoResponse> getById(
             @Parameter(description = "Unique sale ID", example = "1") @PathVariable Long id);
 
-    @Operation(summary = "Find sales by date range", description = "Returns a paginated list of sales within a date range. If no dates are provided, it returns the current day sales.")
+    @Operation(summary = "Find sales by date range")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sales list retrieved successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid date format", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
     })
     ResponseEntity<Page<SaleDtoResponse>> getByDates(
-            @Parameter(description = "Start date for the search (format: YYYY-MM-DD)", example = "2023-10-01") @RequestParam(required = false) String startDate,
-            @Parameter(description = "End date for the search (format: YYYY-MM-DD)", example = "2023-10-31") @RequestParam(required = false) String endDate,
+            @Parameter(description = "Start date for the search (format: YYYY-MM-DD)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "End date for the search (format: YYYY-MM-DD)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @Parameter(description = "Page number to retrieve (0-indexed)", example = "0") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Number of records per page", example = "10") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Field used for sorting", example = "date") @RequestParam(defaultValue = "date") String sortBy,
             @Parameter(description = "Sort direction (asc/desc)", example = "desc") @RequestParam(defaultValue = "desc") String sortDirection);
 
     @Operation(
+            tags = {"00 Seed"},
             summary = "Generate ecommerce seed data",
-            description = "Resets and recreates categories, brands, products, users and sales. Sale dates are distributed between the execution time and the previous 7 days."
+            description = "Resets and recreates categories, brands, products, users and a fixed plain-SQL sales dataset. Sale dates are distributed between the execution time and the previous 7 days."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Sales seed created successfully",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SeedSalesResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid amount requested", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)
     })
-    ResponseEntity<SeedSalesResponse> seedSales(
-            @Parameter(description = "Number of sales to generate", example = "120")
-            @RequestParam(defaultValue = "120") Integer amount);
+    ResponseEntity<SeedSalesResponse> seedSales();
 }

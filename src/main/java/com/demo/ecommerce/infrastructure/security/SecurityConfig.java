@@ -1,11 +1,9 @@
 package com.demo.ecommerce.infrastructure.security;
 
-import com.demo.ecommerce.infrastructure.config.ApiPaths;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -42,24 +40,7 @@ public class SecurityConfig {
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/v3/api-docs.yaml",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                ApiPaths.AUTH + "/**",
-                                ApiPaths.USERS + "/register",
-                                "/error",
-                                "/actuator/health",
-                                "/actuator/health/**"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.GET, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, ApiPaths.SALES + "/seed").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, ApiPaths.SALES + "/**").hasAnyRole("BUYER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, ApiPaths.PRODUCTS + "/**", ApiPaths.BRANDS + "/**", ApiPaths.CATEGORIES + "/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

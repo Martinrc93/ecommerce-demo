@@ -1,7 +1,7 @@
 TRUNCATE TABLE auth, sale_details, sales, products, brands, categories, users RESTART IDENTITY CASCADE;
 
--- Full development seed executed by startup and by POST /api/v1/sales/seed.
--- Sales window is generated between NOW and the previous 7 days.
+-- Plain development seed executed by POST /api/v1/sales/seed.
+-- Sales dates are distributed between now and the previous 7 days.
 
 -- ==============================================
 -- Categories
@@ -94,83 +94,59 @@ INSERT INTO products (id, name, description, brand_id, category_id, price, stock
 (40, 'Electrolyte Tablets', 'Hydration tablets for endurance training.', 11, 8, 14.99, 75, true, 0, CURRENT_TIMESTAMP, 'seed', CURRENT_TIMESTAMP, 'seed');
 
 -- ==============================================
--- Sales and sale details
+-- Sales
 -- ==============================================
-DO $$
-DECLARE
-    target_sales INTEGER := 120 /* seed.sales.count */;
-    i INTEGER;
-    item_total INTEGER;
-    item_index INTEGER;
-    current_sale_id BIGINT;
-    current_subtotal NUMERIC(10, 2);
-    current_user UUID;
-    current_product RECORD;
-    current_quantity INTEGER;
-    current_date TIMESTAMP;
-    selected_products BIGINT[];
-    seed_users UUID[] := ARRAY[
-        '22222222-2222-2222-2222-222222222221'::uuid,
-        '22222222-2222-2222-2222-222222222222'::uuid,
-        '22222222-2222-2222-2222-222222222223'::uuid,
-        '22222222-2222-2222-2222-222222222224'::uuid,
-        '22222222-2222-2222-2222-222222222225'::uuid,
-        '22222222-2222-2222-2222-222222222226'::uuid,
-        '22222222-2222-2222-2222-222222222227'::uuid,
-        '22222222-2222-2222-2222-222222222228'::uuid,
-        '22222222-2222-2222-2222-222222222229'::uuid
-    ];
-BEGIN
-    FOR i IN 1..target_sales LOOP
-        current_user := seed_users[1 + FLOOR(random() * array_length(seed_users, 1))::INTEGER];
-        current_date := NOW() - ((random() * 7 * 24 * 60 * 60)::INTEGER || ' seconds')::INTERVAL;
+INSERT INTO sales (user_id, subtotal, discount, total, date, created_at, created_by, updated_at, last_modified_by) VALUES
+('22222222-2222-2222-2222-222222222221', 219.97, 0, 219.97, CURRENT_TIMESTAMP - INTERVAL '6 days 2 hours', CURRENT_TIMESTAMP - INTERVAL '6 days 2 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '6 days 2 hours', 'seed'),
+('22222222-2222-2222-2222-222222222222', 319.98, 0, 319.98, CURRENT_TIMESTAMP - INTERVAL '5 days 4 hours', CURRENT_TIMESTAMP - INTERVAL '5 days 4 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '5 days 4 hours', 'seed'),
+('22222222-2222-2222-2222-222222222223', 164.97, 0, 164.97, CURRENT_TIMESTAMP - INTERVAL '5 days 1 hour', CURRENT_TIMESTAMP - INTERVAL '5 days 1 hour', 'seed', CURRENT_TIMESTAMP - INTERVAL '5 days 1 hour', 'seed'),
+('22222222-2222-2222-2222-222222222224', 474.97, 0, 474.97, CURRENT_TIMESTAMP - INTERVAL '4 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '4 days 6 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '4 days 6 hours', 'seed'),
+('22222222-2222-2222-2222-222222222225', 319.97, 0, 319.97, CURRENT_TIMESTAMP - INTERVAL '4 days 30 minutes', CURRENT_TIMESTAMP - INTERVAL '4 days 30 minutes', 'seed', CURRENT_TIMESTAMP - INTERVAL '4 days 30 minutes', 'seed'),
+('22222222-2222-2222-2222-222222222226', 519.97, 0, 519.97, CURRENT_TIMESTAMP - INTERVAL '3 days 8 hours', CURRENT_TIMESTAMP - INTERVAL '3 days 8 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '3 days 8 hours', 'seed'),
+('22222222-2222-2222-2222-222222222227', 187.96, 0, 187.96, CURRENT_TIMESTAMP - INTERVAL '2 days 7 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 7 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '2 days 7 hours', 'seed'),
+('22222222-2222-2222-2222-222222222228', 589.98, 0, 589.98, CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', 'seed'),
+('22222222-2222-2222-2222-222222222229', 129.97, 0, 129.97, CURRENT_TIMESTAMP - INTERVAL '1 day 9 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 9 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '1 day 9 hours', 'seed'),
+('22222222-2222-2222-2222-222222222221', 179.97, 0, 179.97, CURRENT_TIMESTAMP - INTERVAL '20 hours', CURRENT_TIMESTAMP - INTERVAL '20 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '20 hours', 'seed'),
+('22222222-2222-2222-2222-222222222223', 539.97, 0, 539.97, CURRENT_TIMESTAMP - INTERVAL '10 hours', CURRENT_TIMESTAMP - INTERVAL '10 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '10 hours', 'seed'),
+('22222222-2222-2222-2222-222222222226', 174.97, 0, 174.97, CURRENT_TIMESTAMP - INTERVAL '2 hours', CURRENT_TIMESTAMP - INTERVAL '2 hours', 'seed', CURRENT_TIMESTAMP - INTERVAL '2 hours', 'seed');
 
-        INSERT INTO sales (user_id, subtotal, discount, total, date, created_at, created_by, updated_at, last_modified_by)
-        VALUES (current_user, 0, 0, 0, current_date, current_date, 'seed', current_date, 'seed')
-        RETURNING id INTO current_sale_id;
-
-        current_subtotal := 0;
-        item_total := 1 + FLOOR(random() * 4)::INTEGER;
-        selected_products := ARRAY[]::BIGINT[];
-
-        FOR item_index IN 1..item_total LOOP
-            SELECT p.id,
-                   p.name,
-                   b.name AS brand_name,
-                   c.name AS category_name,
-                   p.price
-            INTO current_product
-            FROM products p
-            JOIN brands b ON b.id = p.brand_id
-            JOIN categories c ON c.id = p.category_id
-            WHERE NOT (p.id = ANY(selected_products))
-            ORDER BY random()
-            LIMIT 1;
-
-            EXIT WHEN current_product.id IS NULL;
-
-            current_quantity := 1 + FLOOR(random() * 3)::INTEGER;
-            selected_products := array_append(selected_products, current_product.id);
-            current_subtotal := current_subtotal + (current_product.price * current_quantity);
-
-            INSERT INTO sale_details (sale_id, product_id, product_name, brand_name, category_name, quantity, price, discount)
-            VALUES (
-                current_sale_id,
-                current_product.id,
-                current_product.name,
-                current_product.brand_name,
-                current_product.category_name,
-                current_quantity,
-                current_product.price,
-                0
-            );
-        END LOOP;
-
-        UPDATE sales
-        SET subtotal = current_subtotal,
-            total = current_subtotal,
-            updated_at = current_date,
-            last_modified_by = 'seed'
-        WHERE id = current_sale_id;
-    END LOOP;
-END $$;
+-- ==============================================
+-- Sale details
+-- ==============================================
+INSERT INTO sale_details (sale_id, product_id, product_name, brand_name, category_name, quantity, price, discount) VALUES
+(1, 1, 'Air Zoom Pegasus 41', 'Nike', 'Running', 1, 139.99, 0),
+(1, 28, 'Stainless Bottle 32oz', 'Hydro Flask', 'Accessories', 2, 39.99, 0),
+(2, 6, 'Metcon 9', 'Nike', 'Training', 2, 149.99, 0),
+(2, 27, 'Training Gloves', 'Reebok', 'Accessories', 1, 22.99, 0),
+(3, 10, 'Training Shorts', 'Under Armour', 'Training', 3, 44.99, 0),
+(3, 29, 'Performance Socks 3 Pack', 'New Balance', 'Accessories', 1, 17.99, 0),
+(4, 21, 'Mercurial Vapor 16', 'Nike', 'Football', 1, 249.99, 0),
+(4, 24, 'Match Football', 'Wilson', 'Football', 1, 34.99, 0),
+(4, 25, 'Shin Guards Pro', 'Adidas', 'Football', 2, 24.99, 0),
+(4, 26, 'Duffle Bag 40L', 'Nike', 'Accessories', 1, 54.99, 0),
+(5, 11, 'Air Force 1 Low', 'Nike', 'Lifestyle', 2, 119.99, 0),
+(5, 15, 'Essentials Hoodie', 'Adidas', 'Lifestyle', 1, 64.99, 0),
+(5, 29, 'Performance Socks 3 Pack', 'New Balance', 'Accessories', 1, 17.99, 0),
+(6, 31, 'Forerunner 265', 'Garmin', 'Electronics', 1, 449.99, 0),
+(6, 35, 'Bike Speed Sensor', 'Garmin', 'Electronics', 1, 39.99, 0),
+(6, 40, 'Electrolyte Tablets', 'Optimum Nutrition', 'Nutrition', 2, 14.99, 0),
+(7, 18, 'Trail Jacket', 'New Balance', 'Outdoor', 1, 129.99, 0),
+(7, 20, 'Thermal Base Layer', 'Under Armour', 'Outdoor', 1, 54.99, 0),
+(7, 40, 'Electrolyte Tablets', 'Optimum Nutrition', 'Nutrition', 1, 14.99, 0),
+(8, 22, 'Predator Elite', 'Adidas', 'Football', 2, 259.99, 0),
+(8, 24, 'Match Football', 'Wilson', 'Football', 2, 34.99, 0),
+(9, 30, 'Yoga Mat 6mm', 'Under Armour', 'Accessories', 3, 29.99, 0),
+(9, 37, 'Amino Energy', 'Optimum Nutrition', 'Nutrition', 1, 24.99, 0),
+(9, 38, 'Creatine Monohydrate', 'Optimum Nutrition', 'Nutrition', 1, 19.99, 0),
+(10, 28, 'Stainless Bottle 32oz', 'Hydro Flask', 'Accessories', 1, 39.99, 0),
+(10, 36, 'Gold Standard Whey 2lb', 'Optimum Nutrition', 'Nutrition', 1, 39.99, 0),
+(10, 39, 'Protein Bar Box', 'Optimum Nutrition', 'Nutrition', 2, 29.99, 0),
+(10, 40, 'Electrolyte Tablets', 'Optimum Nutrition', 'Nutrition', 1, 14.99, 0),
+(10, 29, 'Performance Socks 3 Pack', 'New Balance', 'Accessories', 1, 17.99, 0),
+(11, 32, 'Venu 3', 'Garmin', 'Electronics', 1, 399.99, 0),
+(11, 33, 'Heart Rate Monitor', 'Garmin', 'Electronics', 1, 89.99, 0),
+(11, 34, 'Wireless Earbuds Sport', 'Under Armour', 'Electronics', 1, 99.99, 0),
+(11, 38, 'Creatine Monohydrate', 'Optimum Nutrition', 'Nutrition', 1, 19.99, 0),
+(11, 40, 'Electrolyte Tablets', 'Optimum Nutrition', 'Nutrition', 2, 14.99, 0),
+(12, 16, 'Speedcross 6', 'Salomon', 'Outdoor', 1, 144.99, 0),
+(12, 40, 'Electrolyte Tablets', 'Optimum Nutrition', 'Nutrition', 2, 14.99, 0);

@@ -17,10 +17,7 @@ public record SeedSalesResponse(
         @Schema(description = "Number of users created", example = "10")
         int users,
 
-        @Schema(description = "Requested number of sales to generate", example = "120")
-        int requestedSales,
-
-        @Schema(description = "Actual number of sales generated", example = "120")
+        @Schema(description = "Actual number of seeded sales", example = "12")
         int createdSales,
 
         @Schema(description = "Start of the generated sales window", example = "2026-07-06T10:15:30")
